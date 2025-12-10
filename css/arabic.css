@@ -1,0 +1,129 @@
+/* Arabic Typography Styles */
+.arabic-text {
+    font-family: 'Noto Naskh Arabic', 'Amiri', serif;
+    line-height: 2;
+    text-align: right;
+    direction: rtl;
+}
+
+.arabic-verse {
+    background: linear-gradient(135deg, rgba(46, 139, 87, 0.1), rgba(212, 175, 55, 0.1));
+    padding: 25px;
+    border-radius: 15px;
+    margin: 25px 0;
+    border-right: 5px solid #2E8B57;
+    border-left: 5px solid #D4AF37;
+}
+
+.arabic-verse .text {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #0A2647;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.arabic-verse .translation {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1rem;
+    color: #444;
+    text-align: center;
+    font-style: italic;
+    direction: ltr;
+}
+
+.arabic-calligraphy {
+    font-family: 'Amiri', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #D4AF37;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(45deg, #0A2647, #2E8B57);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.rtl-content {
+    direction: rtl;
+    text-align: right;
+}
+
+.rtl-content .post-title,
+.rtl-content .post-excerpt,
+.rtl-content p {
+    text-align: right;
+    direction: rtl;
+}
+
+.arabic-note {
+    background-color: #F8F5E9;
+    border: 2px solid #D4AF37;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+    position: relative;
+}
+
+.arabic-note::before {
+    content: "﴾";
+    position: absolute;
+    top: -15px;
+    right: 20px;
+    font-size: 2.5rem;
+    color: #2E8B57;
+    font-family: 'Amiri', serif;
+}
+
+.arabic-note::after {
+    content: "﴿";
+    position: absolute;
+    bottom: -15px;
+    left: 20px;
+    font-size: 2.5rem;
+    color: #2E8B57;
+    font-family: 'Amiri', serif;
+}
+
+/* Arabic Form Styling */
+.arabic-form input[type="text"],
+.arabic-form textarea {
+    text-align: right;
+    direction: rtl;
+    font-family: 'Noto Naskh Arabic', 'Amiri', serif;
+}
+
+.arabic-form label {
+    text-align: right;
+    float: right;
+    direction: rtl;
+}
+
+/* Responsive Arabic Text */
+@media (max-width: 768px) {
+    .arabic-calligraphy {
+        font-size: 1.8rem;
+    }
+    
+    .arabic-verse .text {
+        font-size: 1.4rem;
+    }
+    
+    .arabic-text {
+        font-size: 1.1rem;
+    }
+}
+
+/* Arabic Quote Styling */
+.arabic-quote {
+    border-right: 5px solid #2E8B57;
+    padding-right: 20px;
+    margin: 20px 0;
+    font-style: italic;
+    color: #0A2647;
+    background-color: rgba(46, 139, 87, 0.05);
+    padding: 15px;
+    border-radius: 0 10px 10px 0;
+}
