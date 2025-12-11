@@ -3,15 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SUFISM Admin</title>
+    <title>SUFISM Admin Panel</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #4361ee;
-            --secondary: #3a0ca3;
-            --success: #4cc9f0;
-            --danger: #f72585;
-            --dark: #1a1a2e;
+            --islamic-green: #0a5c36;
+            --gold: #d4af37;
+            --dark: #0d2b1f;
             --light: #f8f9fa;
         }
         
@@ -19,137 +17,46 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
         
         body {
-            background: #f5f7fb;
+            background: var(--light);
             color: #333;
             min-height: 100vh;
-            overflow-x: hidden;
         }
         
-        /* Mobile Header */
-        .mobile-header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            padding: 15px 20px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            height: 60px;
-        }
-        
-        .menu-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 22px;
-            cursor: pointer;
-            padding: 5px;
-        }
-        
-        .app-title {
-            font-size: 18px;
-            font-weight: 600;
+        /* Login Screen */
+        .login-screen {
+            background: linear-gradient(135deg, var(--islamic-green) 0%, var(--dark) 100%);
+            min-height: 100vh;
             display: flex;
             align-items: center;
-            gap: 10px;
-        }
-        
-        .user-avatar {
-            width: 35px;
-            height: 35px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-        
-        /* Mobile Menu */
-        .mobile-menu {
-            position: fixed;
-            top: 60px;
-            left: -280px;
-            width: 280px;
-            height: calc(100vh - 60px);
-            background: white;
-            box-shadow: 3px 0 15px rgba(0,0,0,0.1);
-            transition: left 0.3s ease;
-            z-index: 999;
-            overflow-y: auto;
-            padding: 20px 0;
-        }
-        
-        .mobile-menu.open {
-            left: 0;
-        }
-        
-        .menu-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 18px 25px;
-            color: #555;
-            text-decoration: none;
-            border-bottom: 1px solid #f0f0f0;
-            transition: all 0.3s;
-        }
-        
-        .menu-item.active {
-            background: #f0f7ff;
-            color: var(--primary);
-            border-left: 4px solid var(--primary);
-        }
-        
-        .menu-item i {
-            width: 24px;
-            font-size: 18px;
-        }
-        
-        /* Main Content */
-        .main-content {
-            margin-top: 60px;
             padding: 20px;
-            padding-bottom: 80px;
         }
         
-        .page-title {
-            font-size: 22px;
-            color: var(--dark);
-            margin-bottom: 25px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #f0f0f0;
-        }
-        
-        /* Cards */
-        .card {
+        .login-box {
             background: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
         }
         
-        .card-title {
-            font-size: 18px;
-            color: var(--dark);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .login-logo {
+            text-align: center;
+            margin-bottom: 30px;
         }
         
-        /* Form Elements */
+        .login-logo i {
+            font-size: 50px;
+            color: var(--islamic-green);
+            margin-bottom: 15px;
+        }
+        
         .form-group {
             margin-bottom: 20px;
         }
@@ -169,151 +76,26 @@
             border-radius: 10px;
             font-size: 16px;
             background: #fafafa;
-            -webkit-appearance: none;
         }
         
-        .form-control:focus {
-            border-color: var(--primary);
-            outline: none;
-            background: white;
-        }
-        
-        textarea.form-control {
-            min-height: 120px;
-            resize: vertical;
-        }
-        
-        select.form-control {
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 15px center;
-            background-size: 16px;
-            padding-right: 45px;
-        }
-        
-        /* Buttons */
         .btn {
-            padding: 16px 20px;
+            width: 100%;
+            padding: 16px;
             border: none;
             border-radius: 10px;
             font-size: 16px;
             font-weight: 500;
             cursor: pointer;
-            display: inline-flex;
+            display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
-            transition: all 0.3s;
-            width: 100%;
-            margin-bottom: 10px;
+            margin-top: 10px;
         }
         
         .btn-primary {
-            background: var(--primary);
+            background: var(--islamic-green);
             color: white;
-        }
-        
-        .btn-success {
-            background: var(--success);
-            color: white;
-        }
-        
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-        }
-        
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-        }
-        
-        .btn:active {
-            transform: scale(0.98);
-        }
-        
-        /* Image Upload */
-        .image-upload {
-            border: 2px dashed #ccc;
-            border-radius: 10px;
-            padding: 30px 20px;
-            text-align: center;
-            background: #fafafa;
-            margin-bottom: 15px;
-        }
-        
-        .image-upload:active {
-            border-color: var(--primary);
-            background: #f0f7ff;
-        }
-        
-        .image-preview {
-            max-width: 100%;
-            max-height: 200px;
-            margin-top: 15px;
-            border-radius: 10px;
-            display: none;
-            border: 2px solid #e0e0e0;
-        }
-        
-        /* Categories */
-        .categories-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        .category-tag {
-            background: #e3f2fd;
-            color: #1976d2;
-            padding: 10px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .delete-btn {
-            background: #ff4757;
-            color: white;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            cursor: pointer;
-        }
-        
-        /* Login Screen */
-        .login-screen {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            padding: 20px;
-        }
-        
-        .login-box {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            width: 100%;
-        }
-        
-        .login-logo {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .login-logo i {
-            font-size: 50px;
-            color: var(--primary);
-            margin-bottom: 15px;
         }
         
         .message {
@@ -334,6 +116,83 @@
             background: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
+        }
+        
+        /* Admin Panel */
+        .admin-panel {
+            display: none;
+            min-height: 100vh;
+            padding-top: 60px;
+            padding-bottom: 70px;
+        }
+        
+        .admin-header {
+            background: linear-gradient(135deg, var(--islamic-green) 0%, var(--dark) 100%);
+            color: white;
+            padding: 15px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.2);
+        }
+        
+        .menu-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+        }
+        
+        .admin-content {
+            padding: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .card-title {
+            font-size: 18px;
+            color: var(--dark);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        select.form-control {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 16px;
+            padding-right: 45px;
+        }
+        
+        .btn-success {
+            background: var(--gold);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
         }
         
         /* Bottom Navigation */
@@ -363,7 +222,7 @@
         }
         
         .nav-item.active {
-            color: var(--primary);
+            color: var(--islamic-green);
         }
         
         .nav-item i {
@@ -371,27 +230,7 @@
             margin-bottom: 4px;
         }
         
-        /* Preview */
-        .preview-card {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin-top: 20px;
-            border: 2px solid #e0e0e0;
-        }
-        
-        .preview-content {
-            font-family: 'Amiri', serif;
-            font-size: 18px;
-            line-height: 1.6;
-            color: #333;
-            padding: 15px;
-            background: #f9f9f9;
-            border-radius: 10px;
-            border-left: 4px solid var(--primary);
-        }
-        
-        /* Tabs */
+        /* Tab Content */
         .tab-content {
             display: none;
             animation: fadeIn 0.3s;
@@ -406,53 +245,75 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* Stats Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+        /* Content List */
+        .content-list {
+            display: flex;
+            flex-direction: column;
             gap: 15px;
-            margin-bottom: 25px;
         }
         
-        .stat-card {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+        .content-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            border-left: 4px solid var(--islamic-green);
         }
         
-        .stat-number {
-            font-size: 28px;
-            font-weight: bold;
-            color: var(--primary);
-            margin: 10px 0;
+        .content-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
         }
         
-        .stat-label {
-            font-size: 13px;
-            color: #666;
+        .content-category {
+            background: var(--islamic-green);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
         }
         
-        /* Overlay */
-        .overlay {
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        /* Toast */
+        .toast {
             position: fixed;
-            top: 60px;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 998;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--islamic-green);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
             display: none;
+            animation: slideDown 0.3s ease;
         }
         
-        .overlay.show {
-            display: block;
+        @keyframes slideDown {
+            from {
+                top: 50px;
+                opacity: 0;
+            }
+            to {
+                top: 70px;
+                opacity: 1;
+            }
         }
         
-        /* Media Queries */
+        /* Responsive */
         @media (max-width: 480px) {
-            .main-content {
+            .admin-content {
                 padding: 15px;
             }
             
@@ -464,41 +325,31 @@
                 padding: 14px;
             }
         }
-        
-        /* Loading */
-        .loading {
-            text-align: center;
-            padding: 30px;
-            color: #666;
-        }
-        
-        .loading i {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: var(--primary);
-        }
     </style>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="firebase.js"></script>
 </head>
 <body>
-
-<!-- LOGIN SCREEN -->
-<div id="loginScreen">
-    <div class="login-screen">
+    <!-- LOGIN SCREEN -->
+    <div id="loginScreen" class="login-screen">
         <div class="login-box">
             <div class="login-logo">
                 <i class="fas fa-star-and-crescent"></i>
                 <h2>SUFISM ADMIN</h2>
-                <p style="color: #666; font-size: 14px; margin-top: 5px;">Mobile Admin Panel</p>
+                <p style="color: #666; font-size: 14px; margin-top: 5px;">Content Management System</p>
             </div>
             
             <div class="form-group">
                 <label class="form-label">Username</label>
-                <input type="text" id="username" class="form-control" value="admin" placeholder="Enter username">
+                <input type="text" id="username" class="form-control" value="admin">
             </div>
             
             <div class="form-group">
                 <label class="form-label">Password</label>
-                <input type="password" id="password" class="form-control" value="sufism123" placeholder="Enter password">
+                <input type="password" id="password" class="form-control" value="sufism123">
             </div>
             
             <button class="btn btn-primary" onclick="login()">
@@ -516,631 +367,464 @@
             </div>
         </div>
     </div>
-</div>
-
-<!-- ADMIN PANEL -->
-<div id="adminPanel" style="display: none;">
-    <!-- Mobile Header -->
-    <div class="mobile-header">
-        <button class="menu-btn" onclick="toggleMenu()">
-            <i class="fas fa-bars"></i>
-        </button>
-        <div class="app-title">
-            <i class="fas fa-star-and-crescent"></i>
-            <span id="headerTitle">Dashboard</span>
-        </div>
-        <div class="user-avatar">A</div>
-    </div>
     
-    <!-- Mobile Menu -->
-    <div class="mobile-menu" id="mobileMenu">
-        <a href="#" class="menu-item active" onclick="showTab('dashboard')">
-            <i class="fas fa-tachometer-alt"></i>
-            <span>Dashboard</span>
-        </a>
-        <a href="#" class="menu-item" onclick="showTab('content')">
-            <i class="fas fa-edit"></i>
-            <span>Add Content</span>
-        </a>
-        <a href="#" class="menu-item" onclick="showTab('categories')">
-            <i class="fas fa-tags"></i>
-            <span>Categories</span>
-        </a>
-        <a href="#" class="menu-item" onclick="showTab('media')">
-            <i class="fas fa-images"></i>
-            <span>Media</span>
-        </a>
-        <a href="#" class="menu-item" onclick="showTab('preview')">
-            <i class="fas fa-eye"></i>
-            <span>Preview</span>
-        </a>
-        <a href="#" class="menu-item" onclick="showTab('settings')">
-            <i class="fas fa-cog"></i>
-            <span>Settings</span>
-        </a>
-        <a href="#" class="menu-item" onclick="logout()" style="color: #ff4757; margin-top: 20px;">
-            <i class="fas fa-sign-out-alt"></i>
-            <span>Logout</span>
-        </a>
-    </div>
-    
-    <!-- Overlay -->
-    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
-    
-    <!-- Main Content -->
-    <div class="main-content">
-        <!-- Dashboard Tab -->
-        <div id="dashboardTab" class="tab-content active">
-            <h1 class="page-title">📱 Dashboard</h1>
-            
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <i class="fas fa-file-alt" style="color: var(--primary); font-size: 24px;"></i>
-                    <div class="stat-number">0</div>
-                    <div class="stat-label">Total Content</div>
-                </div>
-                
-                <div class="stat-card">
-                    <i class="fas fa-tags" style="color: var(--success); font-size: 24px;"></i>
-                    <div class="stat-number">3</div>
-                    <div class="stat-label">Categories</div>
-                </div>
-            </div>
-            
-            <div class="card">
-                <div class="card-title">⚡ Quick Actions</div>
-                <button class="btn btn-primary" onclick="showTab('content')">
-                    <i class="fas fa-plus-circle"></i> Add Content
-                </button>
-                <button class="btn btn-success" onclick="showTab('categories')">
-                    <i class="fas fa-tag"></i> Manage Categories
-                </button>
-                <button class="btn btn-secondary" onclick="showTab('media')">
-                    <i class="fas fa-upload"></i> Upload Images
-                </button>
-            </div>
-            
-            <div class="card">
-                <div class="card-title">📝 Recent Activity</div>
-                <div style="padding: 15px; text-align: center; color: #666;">
-                    <i class="fas fa-history" style="font-size: 40px; color: #ddd; margin-bottom: 10px;"></i>
-                    <p>No recent activity</p>
-                </div>
-            </div>
+    <!-- ADMIN PANEL -->
+    <div id="adminPanel" class="admin-panel">
+        <!-- Header -->
+        <div class="admin-header">
+            <button class="menu-btn" onclick="window.location.href='index.html'">
+                <i class="fas fa-home"></i>
+            </button>
+            <div style="font-weight: 500;">SUFISM Admin</div>
+            <button class="menu-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
         </div>
         
-        <!-- Add Content Tab -->
-        <div id="contentTab" class="tab-content">
-            <h1 class="page-title">📝 Add Content</h1>
-            
-            <div class="card">
-                <div class="form-group">
-                    <label class="form-label">Title</label>
-                    <input type="text" id="contentTitle" class="form-control" placeholder="Enter title">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Category</label>
-                    <select id="contentCategory" class="form-control">
-                        <option value="quotes">Sufi Quotes</option>
-                        <option value="poems">Sufi Poems</option>
-                        <option value="teachings">Teachings</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Content</label>
-                    <textarea id="contentText" class="form-control" placeholder="Write your content here..."></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Author</label>
-                    <input type="text" id="contentAuthor" class="form-control" placeholder="e.g., Rumi">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Add Image</label>
-                    <div class="image-upload" onclick="document.getElementById('imageInput').click()">
-                        <i class="fas fa-camera" style="font-size: 30px; color: #ccc; margin-bottom: 10px;"></i>
-                        <div>Tap to select image</div>
-                        <div style="font-size: 12px; color: #999; margin-top: 5px;">JPG or PNG</div>
+        <!-- Toast Message -->
+        <div class="toast" id="toast"></div>
+        
+        <!-- Main Content -->
+        <div class="admin-content">
+            <!-- Dashboard Tab -->
+            <div id="dashboardTab" class="tab-content active">
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
                     </div>
-                    <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="previewImage(event)">
-                    <img id="imagePreview" class="image-preview" src="" alt="Preview">
-                </div>
-                
-                <button class="btn btn-primary" onclick="saveContent()">
-                    <i class="fas fa-save"></i> Save Content
-                </button>
-                <button class="btn btn-secondary" onclick="clearContentForm()">
-                    <i class="fas fa-times"></i> Clear Form
-                </button>
-                <button class="btn btn-success" onclick="previewContent()">
-                    <i class="fas fa-eye"></i> Preview
-                </button>
-                
-                <div class="message success" id="contentSuccess" style="display: none;">
-                    <i class="fas fa-check-circle"></i> Content saved!
-                </div>
-            </div>
-        </div>
-        
-        <!-- Categories Tab -->
-        <div id="categoriesTab" class="tab-content">
-            <h1 class="page-title">🏷️ Categories</h1>
-            
-            <div class="card">
-                <div class="card-title">Add New Category</div>
-                
-                <div class="form-group">
-                    <input type="text" id="newCategory" class="form-control" placeholder="Category name">
-                </div>
-                
-                <button class="btn btn-success" onclick="addCategory()">
-                    <i class="fas fa-plus"></i> Add Category
-                </button>
-                
-                <div class="message success" id="categorySuccess" style="display: none; margin-top: 15px;">
-                    <i class="fas fa-check-circle"></i> Category added!
+                    <p style="color: #666; margin-bottom: 20px;">Manage your SUFISM website content</p>
+                    
+                    <button class="btn btn-primary" onclick="showTab('addContent')">
+                        <i class="fas fa-plus-circle"></i> Add New Content
+                    </button>
+                    
+                    <button class="btn btn-success" onclick="showTab('manageContent')">
+                        <i class="fas fa-edit"></i> Manage Content
+                    </button>
+                    
+                    <div style="margin-top: 30px; padding: 15px; background: #f0f7f4; border-radius: 10px;">
+                        <p style="color: var(--islamic-green); font-weight: 500; margin-bottom: 10px;">Quick Stats:</p>
+                        <p id="statsInfo">Loading stats...</p>
+                    </div>
                 </div>
             </div>
             
-            <div class="card">
-                <div class="card-title">Existing Categories</div>
-                <div class="categories-list" id="categoriesContainer">
-                    <!-- Categories will appear here -->
-                </div>
-            </div>
-        </div>
-        
-        <!-- Media Tab -->
-        <div id="mediaTab" class="tab-content">
-            <h1 class="page-title">🖼️ Media</h1>
-            
-            <div class="card">
-                <div class="card-title">Upload Images</div>
-                
-                <div class="image-upload" onclick="document.getElementById('mediaInput').click()">
-                    <i class="fas fa-cloud-upload-alt" style="font-size: 40px; color: #ccc; margin-bottom: 10px;"></i>
-                    <div>Tap to upload images</div>
-                    <div style="font-size: 12px; color: #999; margin-top: 5px;">Multiple images allowed</div>
-                </div>
-                <input type="file" id="mediaInput" accept="image/*" multiple style="display: none;">
-            </div>
-            
-            <div class="card">
-                <div class="card-title">Uploaded Images</div>
-                <div style="text-align: center; padding: 30px; color: #999;">
-                    <i class="fas fa-images" style="font-size: 50px; margin-bottom: 15px;"></i>
-                    <p>No images uploaded yet</p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Preview Tab -->
-        <div id="previewTab" class="tab-content">
-            <h1 class="page-title">👁️ Preview</h1>
-            
-            <div class="card">
-                <div class="card-title">Website Preview</div>
-                <p style="color: #666; margin-bottom: 15px; font-size: 14px;">
-                    See how your content will look on the live website.
-                </p>
-                
-                <button class="btn btn-primary" onclick="updatePreview()">
-                    <i class="fas fa-sync-alt"></i> Refresh Preview
-                </button>
-                
-                <div style="margin-top: 20px; font-size: 13px; color: #666; background: #f8f9fa; padding: 12px; border-radius: 8px;">
-                    <strong>Live Website:</strong><br>
-                    <a href="https://ahemadjuneja-stack.github.io/Myblog/" target="_blank" style="color: var(--primary); word-break: break-all;">
-                        https://ahemadjuneja-stack.github.io/Myblog/
-                    </a>
+            <!-- Add Content Tab -->
+            <div id="addContentTab" class="tab-content">
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Add New Content</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Title</label>
+                        <input type="text" id="contentTitle" class="form-control" placeholder="Enter title">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select id="contentCategory" class="form-control">
+                            <option value="quotes">Sufi Quote</option>
+                            <option value="poems">Sufi Poem</option>
+                            <option value="teachings">Teaching</option>
+                            <option value="article">Article</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Content</label>
+                        <textarea id="contentText" class="form-control" placeholder="Write your content here..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Author</label>
+                        <input type="text" id="contentAuthor" class="form-control" placeholder="e.g., Rumi, Kabir">
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="saveContent()" id="saveBtn">
+                        <i class="fas fa-save"></i> Save to Database
+                    </button>
+                    
+                    <button class="btn" onclick="clearForm()" style="background: #6c757d; color: white;">
+                        <i class="fas fa-times"></i> Clear Form
+                    </button>
+                    
+                    <div class="message success" id="saveSuccess" style="display: none; margin-top: 15px;">
+                        <i class="fas fa-check-circle"></i> Content saved successfully!
+                    </div>
                 </div>
             </div>
             
-            <div class="preview-card">
-                <div class="preview-content" id="livePreview">
-                    <h3 style="color: var(--primary); margin-bottom: 15px;">Sample Preview</h3>
-                    <p>"The wound is the place where the Light enters you." - Rumi</p>
-                    <div style="margin-top: 15px; font-size: 14px; color: #666; border-left: 3px solid #ddd; padding-left: 10px;">
-                        Add content to see preview here
+            <!-- Manage Content Tab -->
+            <div id="manageContentTab" class="tab-content">
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-edit"></i>
+                        <span>Manage Content</span>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <input type="text" id="searchContent" class="form-control" placeholder="Search content..." onkeyup="filterContent()">
+                    </div>
+                    
+                    <div id="contentList" class="content-list">
+                        <div style="text-align: center; padding: 30px; color: #666;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <p>Loading content...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Settings Tab -->
+            <div id="settingsTab" class="tab-content">
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Change Password</label>
+                        <input type="password" id="newPassword" class="form-control" placeholder="New password">
+                        <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm password" style="margin-top: 10px;">
+                        <button class="btn btn-primary" style="margin-top: 15px;">
+                            <i class="fas fa-key"></i> Update Password
+                        </button>
+                    </div>
+                    
+                    <div style="margin-top: 30px;">
+                        <p style="font-weight: 500; color: #555; margin-bottom: 10px;">Database Info:</p>
+                        <p id="dbInfo" style="font-size: 14px; color: #666;">Loading...</p>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- Settings Tab -->
-        <div id="settingsTab" class="tab-content">
-            <h1 class="page-title">⚙️ Settings</h1>
-            
-            <div class="card">
-                <div class="card-title">Change Password</div>
-                
-                <div class="form-group">
-                    <input type="password" id="currentPassword" class="form-control" placeholder="Current password">
-                </div>
-                
-                <div class="form-group">
-                    <input type="password" id="newPassword" class="form-control" placeholder="New password">
-                </div>
-                
-                <div class="form-group">
-                    <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm new password">
-                </div>
-                
-                <button class="btn btn-primary">
-                    <i class="fas fa-key"></i> Update Password
-                </button>
-            </div>
-            
-            <div class="card">
-                <div class="card-title">Website Settings</div>
-                
-                <div style="display: flex; flex-direction: column; gap: 15px;">
-                    <label style="display: flex; align-items: center; gap: 10px;">
-                        <input type="checkbox" checked style="width: 20px; height: 20px;">
-                        <span>Enable comments</span>
-                    </label>
-                    
-                    <label style="display: flex; align-items: center; gap: 10px;">
-                        <input type="checkbox" checked style="width: 20px; height: 20px;">
-                        <span>Show social buttons</span>
-                    </label>
-                    
-                    <label style="display: flex; align-items: center; gap: 10px;">
-                        <input type="checkbox" style="width: 20px; height: 20px;">
-                        <span>Email notifications</span>
-                    </label>
-                </div>
-                
-                <button class="btn btn-success" style="margin-top: 20px;">
-                    <i class="fas fa-save"></i> Save Settings
-                </button>
-            </div>
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <a href="#" class="nav-item active" onclick="showTab('dashboard')">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showTab('addContent')">
+                <i class="fas fa-plus"></i>
+                <span>Add</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showTab('manageContent')">
+                <i class="fas fa-list"></i>
+                <span>Manage</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showTab('settings')">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
         </div>
     </div>
     
-    <!-- Bottom Navigation -->
-    <div class="bottom-nav">
-        <a href="#" class="nav-item active" onclick="showTab('dashboard')">
-            <i class="fas fa-home"></i>
-            <span>Home</span>
-        </a>
-        <a href="#" class="nav-item" onclick="showTab('content')">
-            <i class="fas fa-plus"></i>
-            <span>Add</span>
-        </a>
-        <a href="#" class="nav-item" onclick="showTab('categories')">
-            <i class="fas fa-tags"></i>
-            <span>Categories</span>
-        </a>
-        <a href="#" class="nav-item" onclick="showTab('preview')">
-            <i class="fas fa-eye"></i>
-            <span>Preview</span>
-        </a>
-        <a href="#" class="nav-item" onclick="showTab('settings')">
-            <i class="fas fa-cog"></i>
-            <span>Settings</span>
-        </a>
-    </div>
-</div>
-
-<script>
-// 🔐 LOGIN SYSTEM
-function login() {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    const errorMsg = document.getElementById('loginError');
-    
-    if(username === 'admin' && password === 'sufism123') {
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('adminPanel').style.display = 'block';
-        showMessage('Login successful!', 'success');
-    } else {
-        errorMsg.style.display = 'block';
-        setTimeout(() => {
-            errorMsg.style.display = 'none';
-        }, 3000);
-    }
-}
-
-function logout() {
-    if(confirm('Logout from admin panel?')) {
-        document.getElementById('adminPanel').style.display = 'none';
-        document.getElementById('loginScreen').style.display = 'block';
-        document.getElementById('username').value = 'admin';
-        document.getElementById('password').value = 'sufism123';
-        showTab('dashboard');
-        closeMenu();
-    }
-}
-
-// 📱 MENU SYSTEM
-function toggleMenu() {
-    const menu = document.getElementById('mobileMenu');
-    const overlay = document.getElementById('overlay');
-    menu.classList.toggle('open');
-    overlay.classList.toggle('show');
-}
-
-function closeMenu() {
-    const menu = document.getElementById('mobileMenu');
-    const overlay = document.getElementById('overlay');
-    menu.classList.remove('open');
-    overlay.classList.remove('show');
-}
-
-// 📂 TAB SYSTEM
-function showTab(tabName) {
-    // Close menu on mobile
-    closeMenu();
-    
-    // Hide all tabs
-    document.querySelectorAll('.tab-content').forEach(tab => {
-        tab.classList.remove('active');
-    });
-    
-    // Remove active from menu items
-    document.querySelectorAll('.menu-item').forEach(item => {
-        item.classList.remove('active');
-    });
-    
-    // Remove active from bottom nav
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.remove('active');
-    });
-    
-    // Show selected tab
-    document.getElementById(tabName + 'Tab').classList.add('active');
-    
-    // Update header title
-    const titles = {
-        'dashboard': 'Dashboard',
-        'content': 'Add Content',
-        'categories': 'Categories',
-        'media': 'Media',
-        'preview': 'Preview',
-        'settings': 'Settings'
-    };
-    
-    document.getElementById('headerTitle').textContent = titles[tabName];
-    
-    // Activate corresponding menu item
-    document.querySelectorAll('.menu-item').forEach(item => {
-        if(item.textContent.includes(titles[tabName])) {
-            item.classList.add('active');
-        }
-    });
-    
-    // Activate corresponding bottom nav
-    document.querySelectorAll('.nav-item').forEach(item => {
-        if(item.textContent.includes(titles[tabName])) {
-            item.classList.add('active');
-        }
-    });
-}
-
-// 📝 CONTENT MANAGEMENT
-function saveContent() {
-    const title = document.getElementById('contentTitle').value;
-    const content = document.getElementById('contentText').value;
-    const imageFile = document.getElementById('imageInput').files[0];
-    
-    if(!title || !content) {
-        alert('Please fill in Title and Content!');
-        return;
-    }
-    
-    const saveBtn = document.querySelector('#contentTab .btn-primary');
-    const originalText = saveBtn.innerHTML;
-    saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
-    saveBtn.disabled = true;
-    
-    const successMsg = document.getElementById('contentSuccess');
-    
-    // Simulate save (2 seconds)
-    setTimeout(() => {
-        successMsg.style.display = 'block';
-        saveBtn.innerHTML = originalText;
-        saveBtn.disabled = false;
-        
-        showMessage('Content saved successfully!', 'success');
-        
-        // Log to console
-        console.log('📱 Mobile - Content Saved:', {
-            title: title,
-            content: content.substring(0, 30) + '...',
-            category: document.getElementById('contentCategory').value,
-            author: document.getElementById('contentAuthor').value,
-            hasImage: imageFile ? 'Yes' : 'No'
-        });
-        
-        // Clear form
-        clearContentForm();
-        
-        // Hide success message after 3 seconds
-        setTimeout(() => {
-            successMsg.style.display = 'none';
-        }, 3000);
-        
-    }, 2000);
-}
-
-function clearContentForm() {
-    document.getElementById('contentTitle').value = '';
-    document.getElementById('contentText').value = '';
-    document.getElementById('contentAuthor').value = '';
-    document.getElementById('imagePreview').style.display = 'none';
-    document.getElementById('imagePreview').src = '';
-    document.getElementById('imageInput').value = '';
-}
-
-function previewContent() {
-    const title = document.getElementById('contentTitle').value || 'Sample Title';
-    const content = document.getElementById('contentText').value || 'Sample content will appear here...';
-    const author = document.getElementById('contentAuthor').value || 'Anonymous';
-    const imageFile = document.getElementById('imageInput').files[0];
-    
-    if(imageFile) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('livePreview').innerHTML = `
-                <h3 style="color: var(--primary); margin-bottom: 15px;">${title}</h3>
-                <img src="${e.target.result}" style="max-width: 100%; border-radius: 10px; margin-bottom: 15px;">
-                <p style="font-size: 16px; line-height: 1.6;">${content}</p>
-                <div style="margin-top: 15px; font-style: italic; color: #666;">
-                    - ${author}
-                </div>
-                <div style="margin-top: 15px; font-size: 12px; color: #999;">
-                    Mobile Preview
-                </div>
-            `;
-        };
-        reader.readAsDataURL(imageFile);
-    } else {
-        document.getElementById('livePreview').innerHTML = `
-            <h3 style="color: var(--primary); margin-bottom: 15px;">${title}</h3>
-            <p style="font-size: 16px; line-height: 1.6;">${content}</p>
-            <div style="margin-top: 15px; font-style: italic; color: #666;">
-                - ${author}
-            </div>
-        `;
-    }
-    
-    showTab('preview');
-}
-
-// 🏷️ CATEGORIES MANAGEMENT
-let categories = ['Sufi Quotes', 'Sufi Poems', 'Teachings'];
-
-function addCategory() {
-    const newCat = document.getElementById('newCategory').value.trim();
-    if(!newCat) {
-        alert('Please enter category name!');
-        return;
-    }
-    
-    if(categories.includes(newCat)) {
-        alert('Category already exists!');
-        return;
-    }
-    
-    categories.push(newCat);
-    updateCategoriesList();
-    document.getElementById('newCategory').value = '';
-    
-    const successMsg = document.getElementById('categorySuccess');
-    successMsg.style.display = 'block';
-    
-    showMessage(`Category "${newCat}" added!`, 'success');
-    
-    setTimeout(() => {
-        successMsg.style.display = 'none';
-    }, 2000);
-}
-
-function deleteCategory(categoryName) {
-    if(confirm(`Delete "${categoryName}"?`)) {
-        categories = categories.filter(cat => cat !== categoryName);
-        updateCategoriesList();
-        showMessage(`Category "${categoryName}" deleted!`, 'success');
-    }
-}
-
-function updateCategoriesList() {
-    const container = document.getElementById('categoriesContainer');
-    container.innerHTML = '';
-    
-    categories.forEach(cat => {
-        const tag = document.createElement('div');
-        tag.className = 'category-tag';
-        tag.innerHTML = `
-            ${cat}
-            <div class="delete-btn" onclick="deleteCategory('${cat}')">
-                ×
-            </div>
-        `;
-        container.appendChild(tag);
-    });
-}
-
-// 🖼️ IMAGE UPLOAD
-function previewImage(event) {
-    const input = event.target;
-    const preview = document.getElementById('imagePreview');
-    
-    if(input.files && input.files[0]) {
-        const reader = new FileReader();
-        
-        reader.onload = function(e) {
-            preview.src = e.target.result;
-            preview.style.display = 'block';
-        }
-        
-        reader.readAsDataURL(input.files[0]);
-        showMessage('Image selected!', 'success');
-    }
-}
-
-// 👁️ PREVIEW
-function updatePreview() {
-    showMessage('Preview refreshed!', 'success');
-    document.getElementById('livePreview').innerHTML += `
-        <div style="margin-top: 15px; padding: 8px; background: #e8f5e9; border-radius: 5px; font-size: 12px;">
-            <i class="fas fa-sync-alt"></i> Refreshed: ${new Date().toLocaleTimeString()}
-        </div>
-    `;
-}
-
-// 💬 MESSAGES
-function showMessage(text, type) {
-    const msg = document.createElement('div');
-    msg.className = `message ${type}`;
-    msg.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${text}`;
-    msg.style.position = 'fixed';
-    msg.style.top = '70px';
-    msg.style.left: '20px';
-    msg.style.right: '20px';
-    msg.style.zIndex = '1000';
-    
-    document.body.appendChild(msg);
-    
-    setTimeout(() => {
-        msg.remove();
-    }, 3000);
-}
-
-// 🎯 INITIALIZE
-window.onload = function() {
-    updateCategoriesList();
-    document.getElementById('username').focus();
-    
-    // Enter key for login
-    document.getElementById('password').addEventListener('keypress', function(e) {
-        if(e.key === 'Enter') login();
-    });
-    
-    // Swipe gesture support (optional)
-    let startX = 0;
-    document.addEventListener('touchstart', (e) => {
-        startX = e.touches[0].clientX;
-    });
-    
-    document.addEventListener('touchend', (e) => {
-        const endX = e.changedTouches[0].clientX;
-        const diff = startX - endX;
-        
-        if(Math.abs(diff) > 50) { // Minimum swipe distance
-            if(diff > 0) {
-                // Swipe left - could implement tab switching
+    <script>
+        // 🔐 LOGIN SYSTEM
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('loginError');
+            
+            // Simple login (no Firebase Auth needed)
+            if(username === 'admin' && password === 'sufism123') {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                showToast('Login successful!', 'success');
+                loadStats();
+                loadContentList();
             } else {
-                // Swipe right - could implement tab switching
+                errorMsg.style.display = 'block';
+                setTimeout(() => {
+                    errorMsg.style.display = 'none';
+                }, 3000);
             }
         }
-    });
-};
-</script>
-
+        
+        function logout() {
+            if(confirm('Are you sure you want to logout?')) {
+                document.getElementById('adminPanel').style.display = 'none';
+                document.getElementById('loginScreen').style.display = 'block';
+                document.getElementById('username').value = 'admin';
+                document.getElementById('password').value = 'sufism123';
+                showTab('dashboard');
+            }
+        }
+        
+        // 📂 TAB SYSTEM
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active from nav
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            
+            // Update nav active state
+            document.querySelectorAll('.nav-item').forEach(item => {
+                if(item.textContent.includes(tabName.replace('Tab', ''))) {
+                    item.classList.add('active');
+                }
+            });
+            
+            // Load content if on manage tab
+            if(tabName === 'manageContent') {
+                loadContentList();
+            }
+        }
+        
+        // 💾 SAVE CONTENT TO FIREBASE
+        async function saveContent() {
+            const title = document.getElementById('contentTitle').value.trim();
+            const content = document.getElementById('contentText').value.trim();
+            const category = document.getElementById('contentCategory').value;
+            const author = document.getElementById('contentAuthor').value.trim();
+            
+            if(!title || !content) {
+                showToast('Please fill in title and content!', 'error');
+                return;
+            }
+            
+            // Disable button and show loading
+            const saveBtn = document.getElementById('saveBtn');
+            const originalText = saveBtn.innerHTML;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            saveBtn.disabled = true;
+            
+            try {
+                // Check Firebase connection
+                if(!window.db) {
+                    throw new Error('Firebase not connected');
+                }
+                
+                // Create content object
+                const contentData = {
+                    title: title,
+                    content: content,
+                    category: category,
+                    author: author || 'Anonymous',
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    createdBy: 'admin'
+                };
+                
+                // Save to Firestore
+                await db.collection('sufi_content').add(contentData);
+                
+                // Success
+                showToast('✅ Content saved to database!', 'success');
+                
+                // Clear form
+                clearForm();
+                
+                // Update stats
+                loadStats();
+                
+                // Show success message
+                const successMsg = document.getElementById('saveSuccess');
+                successMsg.style.display = 'block';
+                setTimeout(() => {
+                    successMsg.style.display = 'none';
+                }, 3000);
+                
+                // Log to console
+                console.log('Content saved:', {
+                    title: title,
+                    category: category,
+                    author: author,
+                    timestamp: new Date().toLocaleString()
+                });
+                
+            } catch(error) {
+                console.error('Save error:', error);
+                showToast('❌ Error saving content: ' + error.message, 'error');
+            } finally {
+                // Restore button
+                saveBtn.innerHTML = originalText;
+                saveBtn.disabled = false;
+            }
+        }
+        
+        // 📋 LOAD CONTENT LIST
+        async function loadContentList() {
+            try {
+                const contentList = document.getElementById('contentList');
+                contentList.innerHTML = `
+                    <div style="text-align: center; padding: 20px; color: #666;">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Loading content...</p>
+                    </div>
+                `;
+                
+                if(!window.db) {
+                    throw new Error('Firebase not connected');
+                }
+                
+                const querySnapshot = await db.collection('sufi_content')
+                    .orderBy('timestamp', 'desc')
+                    .limit(50)
+                    .get();
+                
+                if(querySnapshot.empty) {
+                    contentList.innerHTML = `
+                        <div style="text-align: center; padding: 40px; color: #666;">
+                            <i class="fas fa-inbox"></i>
+                            <p>No content yet. Add your first content!</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                let html = '';
+                querySnapshot.forEach(doc => {
+                    const data = doc.data();
+                    const date = data.timestamp ? data.timestamp.toDate().toLocaleDateString() : 'Recently';
+                    
+                    html += `
+                        <div class="content-item" data-id="${doc.id}">
+                            <div class="content-item-header">
+                                <span class="content-category">${data.category || 'General'}</span>
+                                <button class="delete-btn" onclick="deleteContent('${doc.id}')">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
+                            <h4 style="margin-bottom: 8px; color: #333;">${data.title || 'No Title'}</h4>
+                            <p style="color: #666; font-size: 14px; margin-bottom: 8px;">${(data.content || '').substring(0, 100)}...</p>
+                            <div style="display: flex; justify-content: space-between; font-size: 12px; color: #888;">
+                                <span><i class="fas fa-user"></i> ${data.author || 'Anonymous'}</span>
+                                <span><i class="fas fa-calendar"></i> ${date}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                contentList.innerHTML = html;
+                
+            } catch(error) {
+                console.error('Load content error:', error);
+                document.getElementById('contentList').innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #dc3545;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Error loading content</p>
+                        <p style="font-size: 12px; margin-top: 5px;">${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // 🗑️ DELETE CONTENT
+        async function deleteContent(docId) {
+            if(!confirm('Are you sure you want to delete this content?')) {
+                return;
+            }
+            
+            try {
+                await db.collection('sufi_content').doc(docId).delete();
+                showToast('Content deleted successfully!', 'success');
+                loadContentList();
+                loadStats();
+            } catch(error) {
+                console.error('Delete error:', error);
+                showToast('Error deleting content', 'error');
+            }
+        }
+        
+        // 📊 LOAD STATS
+        async function loadStats() {
+            try {
+                if(!window.db) return;
+                
+                const querySnapshot = await db.collection('sufi_content').get();
+                const count = querySnapshot.size;
+                
+                document.getElementById('statsInfo').innerHTML = `
+                    Total Content: <strong>${count}</strong><br>
+                    Last Updated: <strong>${new Date().toLocaleTimeString()}</strong>
+                `;
+                
+                // Update DB info in settings
+                document.getElementById('dbInfo').innerHTML = `
+                    Collection: <strong>sufi_content</strong><br>
+                    Documents: <strong>${count}</strong><br>
+                    Firebase Project: <strong>arwa-cf9b4</strong>
+                `;
+                
+            } catch(error) {
+                console.error('Stats error:', error);
+            }
+        }
+        
+        // 🔍 FILTER CONTENT
+        function filterContent() {
+            const searchTerm = document.getElementById('searchContent').value.toLowerCase();
+            const items = document.querySelectorAll('.content-item');
+            
+            items.forEach(item => {
+                const title = item.querySelector('h4').textContent.toLowerCase();
+                const content = item.querySelector('p').textContent.toLowerCase();
+                const author = item.querySelector('span').textContent.toLowerCase();
+                
+                if(title.includes(searchTerm) || content.includes(searchTerm) || author.includes(searchTerm)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+        
+        // 🧹 CLEAR FORM
+        function clearForm() {
+            document.getElementById('contentTitle').value = '';
+            document.getElementById('contentText').value = '';
+            document.getElementById('contentAuthor').value = '';
+        }
+        
+        // 💬 TOAST MESSAGE
+        function showToast(message, type) {
+            const toast = document.getElementById('toast');
+            const colors = {
+                'success': '#0a5c36',
+                'error': '#dc3545',
+                'info': '#17a2b8',
+                'warning': '#ffc107'
+            };
+            
+            toast.textContent = message;
+            toast.style.backgroundColor = colors[type] || '#0a5c36';
+            toast.style.display = 'block';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+        
+        // 📱 INITIALIZE
+        window.onload = function() {
+            // Enter key for login
+            document.getElementById('password').addEventListener('keypress', function(e) {
+                if(e.key === 'Enter') login();
+            });
+            
+            // Auto-focus on username
+            document.getElementById('username').focus();
+            
+            // Check Firebase connection
+            if(window.db) {
+                console.log('Firebase connected in Admin Panel');
+            } else {
+                console.error('Firebase not connected in Admin Panel');
+            }
+        };
+    </script>
 </body>
 </html>
