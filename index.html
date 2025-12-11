@@ -6,6 +6,12 @@
     <title>SUFISM | The Path of Divine Love</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="firebase.js"></script>
+    
     <style>
         :root {
             --islamic-green: #0a5c36;
@@ -160,10 +166,7 @@
         
         /* Hero Section */
         .hero {
-            background: linear-gradient(rgba(10, 92, 54, 0.9), rgba(13, 43, 31, 0.9)), 
-                        url('https://images.unsplash.com/photo-1516557070067-4c6ad59474a9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
-            background-size: cover;
-            background-position: center;
+            background: linear-gradient(rgba(10, 92, 54, 0.9), rgba(13, 43, 31, 0.9));
             color: white;
             padding: 100px 20px 60px;
             text-align: center;
@@ -397,6 +400,33 @@
                 padding: 30px 15px;
             }
         }
+        
+        /* Message Toast */
+        .toast {
+            position: fixed;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--islamic-green);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from {
+                top: 50px;
+                opacity: 0;
+            }
+            to {
+                top: 70px;
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 <body>
@@ -425,8 +455,7 @@
         <div class="menu-category">
             <div class="category-title">Categories</div>
             <div id="categoriesMenu">
-                <!-- Categories will be loaded here -->
-                <a href="#" class="menu-item" onclick="filterContent('all')">
+                <a href="#" class="menu-item active" onclick="filterContent('all')">
                     <i class="fas fa-th"></i>
                     <span>All Content</span>
                 </a>
@@ -435,15 +464,15 @@
         
         <div class="menu-category">
             <div class="category-title">Quick Links</div>
-            <a href="#quotes" class="menu-item" onclick="filterContent('quotes')">
+            <a href="#" class="menu-item" onclick="filterContent('quotes')">
                 <i class="fas fa-quote-right"></i>
                 <span>Sufi Quotes</span>
             </a>
-            <a href="#poems" class="menu-item" onclick="filterContent('poems')">
+            <a href="#" class="menu-item" onclick="filterContent('poems')">
                 <i class="fas fa-pen-nib"></i>
                 <span>Sufi Poems</span>
             </a>
-            <a href="#teachings" class="menu-item" onclick="filterContent('teachings')">
+            <a href="#" class="menu-item" onclick="filterContent('teachings')">
                 <i class="fas fa-book"></i>
                 <span>Teachings</span>
             </a>
@@ -465,6 +494,9 @@
     <!-- Overlay -->
     <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
     
+    <!-- Toast Message -->
+    <div class="toast" id="toast"></div>
+    
     <!-- Hero Section -->
     <section class="hero">
         <div class="arabic-text" id="randomArabic">
@@ -477,7 +509,7 @@
     <!-- Search Bar -->
     <div class="search-container">
         <div class="search-box">
-            <input type="text" class="search-input" id="searchInput" placeholder="Search Sufi wisdom...">
+            <input type="text" class="search-input" id="searchInput" placeholder="Search Sufi wisdom..." onkeypress="if(event.key=='Enter') searchContent()">
             <button class="search-btn" onclick="searchContent()">
                 <i class="fas fa-search"></i>
             </button>
@@ -545,34 +577,7 @@
         <i class="fas fa-lock"></i>
     </a>
     
-    <!-- Firebase Connection -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="firebase.js"></script>
-    
     <script>
-        // 🔥 FIREBASE CONNECTION
-        let db;
-        
-        // Initialize Firebase when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            // Your Firebase config from firebase.js
-            if(typeof firebase !== 'undefined') {
-                db = firebase.firestore();
-                loadContent();
-                loadCategories();
-            } else {
-                console.error("Firebase not loaded!");
-                document.getElementById('featuredContent').innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <h3>Firebase Error</h3>
-                        <p>Please check your Firebase connection</p>
-                    </div>
-                `;
-            }
-        });
-        
         // 📱 SIDEBAR FUNCTIONS
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -602,6 +607,12 @@
                     </div>
                 `;
                 
+                // Check if Firebase is initialized
+                if (!window.db) {
+                    showToast('Firebase not connected. Please refresh page.', 'error');
+                    return;
+                }
+                
                 // Get data from Firestore
                 const querySnapshot = await db.collection('sufi_content')
                     .orderBy('timestamp', 'desc')
@@ -611,7 +622,9 @@
                 if(querySnapshot.empty) {
                     // No content found
                     contentContainer.innerHTML = '';
+                    featuredContainer.innerHTML = '';
                     document.getElementById('emptyState').style.display = 'block';
+                    showToast('No content found. Add content from Admin Panel.', 'info');
                     return;
                 }
                 
@@ -624,7 +637,7 @@
                 
                 querySnapshot.forEach(doc => {
                     const data = doc.data();
-                    const card = createContentCard(data);
+                    const card = createContentCard(data, doc.id);
                     
                     // First 2 items as featured
                     if(count < 2) {
@@ -645,20 +658,24 @@
                 
                 contentContainer.innerHTML = allHTML;
                 
+                showToast(`Loaded ${count} items from database`, 'success');
+                
             } catch(error) {
                 console.error("Error loading content:", error);
                 document.getElementById('allContent').innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-exclamation-triangle"></i>
                         <h3>Error Loading Content</h3>
-                        <p>Please check your internet connection</p>
+                        <p>${error.message}</p>
+                        <p style="margin-top: 10px; font-size: 14px;">Check Firebase connection</p>
                     </div>
                 `;
+                showToast('Error loading content: ' + error.message, 'error');
             }
         }
         
         // 🎨 CREATE CONTENT CARD
-        function createContentCard(data) {
+        function createContentCard(data, id) {
             const icons = {
                 'quotes': 'fa-quote-right',
                 'poems': 'fa-pen-nib',
@@ -688,23 +705,33 @@
             // Format date
             let dateStr = 'Recently';
             if(data.timestamp) {
-                const date = data.timestamp.toDate();
-                dateStr = date.toLocaleDateString('en-US', { 
-                    month: 'short', 
-                    day: 'numeric',
-                    year: 'numeric'
-                });
+                try {
+                    const date = data.timestamp.toDate();
+                    dateStr = date.toLocaleDateString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric',
+                        year: 'numeric'
+                    });
+                } catch(e) {
+                    console.log("Date error:", e);
+                }
+            }
+            
+            // Truncate content for preview
+            let contentPreview = data.content || 'Divine wisdom from the masters...';
+            if(contentPreview.length > 150) {
+                contentPreview = contentPreview.substring(0, 150) + '...';
             }
             
             return `
-                <div class="content-card" data-category="${category}">
+                <div class="content-card" data-category="${category}" data-id="${id}">
                     <div class="card-image" style="background: linear-gradient(135deg, ${color}, ${color}99);">
                         <i class="fas ${icon}"></i>
                     </div>
                     <div class="card-content">
                         <span class="card-category">${categoryName}</span>
                         <h3 class="card-title">${data.title || 'Sufi Wisdom'}</h3>
-                        <p class="card-text">${data.content || 'Divine wisdom from the masters...'}</p>
+                        <p class="card-text">${contentPreview}</p>
                         <div class="card-author">
                             <i class="fas fa-user"></i>
                             <span>${data.author || 'Anonymous'} • ${dateStr}</span>
@@ -715,20 +742,25 @@
         }
         
         // 🏷️ LOAD CATEGORIES
-        async function loadCategories() {
-            try {
-                const categoriesMenu = document.getElementById('categoriesMenu');
-                
-                // Default categories
-                const defaultCategories = [
-                    {id: 'all', name: 'All Content', icon: 'fa-th'},
-                    {id: 'quotes', name: 'Sufi Quotes', icon: 'fa-quote-right'},
-                    {id: 'poems', name: 'Sufi Poems', icon: 'fa-pen-nib'},
-                    {id: 'teachings', name: 'Teachings', icon: 'fa-book'}
-                ];
-                
-                // Add categories to menu
-                defaultCategories.forEach(cat => {
+        function loadCategories() {
+            const categoriesMenu = document.getElementById('categoriesMenu');
+            
+            // Default categories
+            const defaultCategories = [
+                {id: 'all', name: 'All Content', icon: 'fa-th'},
+                {id: 'quotes', name: 'Sufi Quotes', icon: 'fa-quote-right'},
+                {id: 'poems', name: 'Sufi Poems', icon: 'fa-pen-nib'},
+                {id: 'teachings', name: 'Teachings', icon: 'fa-book'}
+            ];
+            
+            // Clear existing (keep first one)
+            const firstItem = categoriesMenu.querySelector('.menu-item');
+            categoriesMenu.innerHTML = '';
+            if(firstItem) categoriesMenu.appendChild(firstItem);
+            
+            // Add categories to menu
+            defaultCategories.forEach(cat => {
+                if(cat.id !== 'all') {
                     const item = document.createElement('a');
                     item.href = '#';
                     item.className = 'menu-item';
@@ -738,11 +770,8 @@
                     `;
                     item.onclick = () => filterContent(cat.id);
                     categoriesMenu.appendChild(item);
-                });
-                
-            } catch(error) {
-                console.error("Error loading categories:", error);
-            }
+                }
+            });
         }
         
         // 🔍 FILTER CONTENT BY CATEGORY
@@ -750,11 +779,19 @@
             closeSidebar();
             
             const cards = document.querySelectorAll('.content-card');
-            const sectionTitle = document.querySelector('.section-title h2');
+            const sectionTitle = document.querySelectorAll('.section-title h2')[1]; // Second h2
+            
+            // Update active menu item
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Activate clicked item
+            event.target.closest('.menu-item').classList.add('active');
             
             if(category === 'all') {
                 cards.forEach(card => card.style.display = 'block');
-                sectionTitle.textContent = 'All Content';
+                if(sectionTitle) sectionTitle.textContent = 'All Content';
             } else {
                 cards.forEach(card => {
                     if(card.dataset.category === category) {
@@ -770,14 +807,24 @@
                     'poems': 'Sufi Poems',
                     'teachings': 'Teachings'
                 };
-                sectionTitle.textContent = categoryNames[category] || category;
+                if(sectionTitle) {
+                    sectionTitle.textContent = categoryNames[category] || category;
+                }
             }
         }
         
         // 🔎 SEARCH CONTENT
         function searchContent() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
             const cards = document.querySelectorAll('.content-card');
+            
+            if(!searchTerm) {
+                cards.forEach(card => card.style.display = 'block');
+                showToast('Showing all content', 'info');
+                return;
+            }
+            
+            let foundCount = 0;
             
             cards.forEach(card => {
                 const title = card.querySelector('.card-title').textContent.toLowerCase();
@@ -786,43 +833,43 @@
                 
                 if(title.includes(searchTerm) || text.includes(searchTerm) || author.includes(searchTerm)) {
                     card.style.display = 'block';
+                    foundCount++;
                 } else {
                     card.style.display = 'none';
                 }
             });
             
             closeSidebar();
+            
+            if(foundCount > 0) {
+                showToast(`Found ${foundCount} items for "${searchTerm}"`, 'success');
+            } else {
+                showToast(`No results found for "${searchTerm}"`, 'info');
+            }
         }
         
         // 🔄 REFRESH CONTENT
         function refreshContent() {
             closeSidebar();
             loadContent();
-            showMessage('Content refreshed!', 'success');
         }
         
-        // 💬 SHOW MESSAGE
-        function showMessage(text, type) {
-            const msg = document.createElement('div');
-            msg.style.cssText = `
-                position: fixed;
-                top: 70px;
-                left: 20px;
-                right: 20px;
-                background: ${type === 'success' ? '#0a5c36' : '#dc3545'};
-                color: white;
-                padding: 15px;
-                border-radius: 10px;
-                text-align: center;
-                z-index: 1000;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            `;
-            msg.innerHTML = `<i class="fas fa-${type === 'success' ? 'check' : 'exclamation'}-circle"></i> ${text}`;
+        // 💬 SHOW TOAST MESSAGE
+        function showToast(message, type) {
+            const toast = document.getElementById('toast');
+            const colors = {
+                'success': '#0a5c36',
+                'error': '#dc3545',
+                'info': '#17a2b8',
+                'warning': '#ffc107'
+            };
             
-            document.body.appendChild(msg);
+            toast.textContent = message;
+            toast.style.backgroundColor = colors[type] || '#0a5c36';
+            toast.style.display = 'block';
             
             setTimeout(() => {
-                msg.remove();
+                toast.style.display = 'none';
             }, 3000);
         }
         
@@ -834,24 +881,30 @@
             "رب اشرح لي صدري",
             "إن الله مع الصابرين",
             "والعصر إن الإنسان لفي خسر",
-            "فاذكروني أذكركم"
+            "فاذكروني أذكركم",
+            "إنما المؤمنون إخوة",
+            "ولا تيأسوا من روح الله",
+            "والله يعلم المفسد من المصلح"
         ];
         
         // Set random Arabic text on load
         document.getElementById('randomArabic').textContent = 
             arabicTexts[Math.floor(Math.random() * arabicTexts.length)];
         
-        // Enter key for search
-        document.getElementById('searchInput').addEventListener('keypress', function(e) {
-            if(e.key === 'Enter') searchContent();
-        });
-        
-        // Auto-load on page load
+        // 📱 INITIALIZE ON LOAD
         window.onload = function() {
+            // Check Firebase connection
+            if(!window.db) {
+                console.error("Firebase not initialized!");
+                showToast('Firebase connection failed. Check console.', 'error');
+            } else {
+                console.log("Firebase connected successfully");
+            }
+            
+            // Load content after 1 second
             setTimeout(() => {
-                if(typeof db !== 'undefined') {
-                    loadContent();
-                }
+                loadContent();
+                loadCategories();
             }, 1000);
         };
     </script>
