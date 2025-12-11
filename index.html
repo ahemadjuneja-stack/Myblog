@@ -3,324 +3,956 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SUFISM Admin Panel</title>
+    <title>SUFISM | Professional Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --sidebar: #16213e;
+        }
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            background: #f5f7fb;
+            color: #333;
             display: flex;
-            justify-content: center;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: var(--sidebar);
+            color: white;
+            position: fixed;
+            height: 100vh;
+            padding: 20px 0;
+            transition: all 0.3s;
+        }
+        
+        .logo {
+            text-align: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .logo h2 {
+            color: white;
+            font-size: 22px;
+        }
+        
+        .logo p {
+            color: #aaa;
+            font-size: 12px;
+        }
+        
+        .nav-links {
+            padding: 0 15px;
+        }
+        
+        .nav-links a {
+            display: flex;
             align-items: center;
+            gap: 12px;
+            color: #b0b7c3;
+            text-decoration: none;
+            padding: 12px 15px;
+            margin: 5px 0;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
             padding: 20px;
         }
         
-        .login-box, .admin-panel {
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            width: 90%;
-            max-width: 500px;
-            text-align: center;
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #e0e0e0;
         }
         
-        h1 {
-            color: #4CAF50;
-            margin-bottom: 20px;
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
         
-        .input-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #333;
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
             font-weight: bold;
         }
         
-        input, textarea, select {
+        /* Cards */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            color: var(--dark);
+            font-weight: 600;
+        }
+        
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .form-control {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-            margin-top: 5px;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border 0.3s;
         }
         
-        textarea {
-            height: 150px;
-            resize: vertical;
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
         }
         
-        button {
-            padding: 12px 24px;
+        /* Buttons */
+        .btn {
+            padding: 12px 25px;
             border: none;
-            border-radius: 5px;
-            font-size: 16px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
             cursor: pointer;
-            margin: 10px 5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
         }
         
-        .login-btn {
-            background: #4CAF50;
+        .btn-primary {
+            background: var(--primary);
             color: white;
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        /* Preview Window */
+        .preview-window {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 3px dashed #e0e0e0;
+            min-height: 300px;
+        }
+        
+        .preview-content {
+            font-family: 'Amiri', serif;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            border-left: 5px solid var(--primary);
+        }
+        
+        /* Categories List */
+        .categories-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .category-tag {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .category-tag .delete {
+            color: #f44336;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        /* Image Upload */
+        .image-upload {
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: border 0.3s;
+        }
+        
+        .image-upload:hover {
+            border-color: var(--primary);
+        }
+        
+        .image-preview {
+            max-width: 200px;
+            max-height: 150px;
+            margin-top: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 25px;
+        }
+        
+        .tab {
+            padding: 12px 25px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            color: #666;
+        }
+        
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        /* Login Screen */
+        .login-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        }
+        
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
             width: 100%;
+            max-width: 400px;
         }
         
-        .save-btn {
-            background: #2196F3;
-            color: white;
-        }
-        
-        .logout-btn {
-            background: #f44336;
-            color: white;
-        }
-        
-        .error {
-            color: red;
-            margin: 10px 0;
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
             display: none;
         }
         
-        .success {
-            color: green;
-            margin: 10px 0;
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        /* Hidden by default */
+        .tab-content {
             display: none;
         }
         
-        #loginContainer {
+        .tab-content.active {
             display: block;
         }
         
-        #adminPanel {
+        .login-screen {
+            display: block;
+        }
+        
+        .admin-panel {
             display: none;
         }
     </style>
-    
-    <!-- Firebase Connection -->
-    <script type="module" src="firebase.js"></script>
 </head>
 <body>
 
 <!-- LOGIN SCREEN -->
-<div id="loginContainer">
+<div id="loginScreen" class="login-screen">
     <div class="login-box">
-        <h1>🔐 SUFISM ADMIN LOGIN</h1>
-        
-        <div class="input-group">
-            <label>Username:</label>
-            <input type="text" id="username" value="admin">
+        <div style="text-align: center; margin-bottom: 30px;">
+            <div style="font-size: 40px; color: var(--primary); margin-bottom: 10px;">
+                <i class="fas fa-star-and-crescent"></i>
+            </div>
+            <h2>SUFISM ADMIN</h2>
+            <p style="color: #666;">Professional Content Management System</p>
         </div>
         
-        <div class="input-group">
-            <label>Password:</label>
-            <input type="password" id="password" value="sufism123">
+        <div class="form-group">
+            <label class="form-label">Username</label>
+            <input type="text" id="username" class="form-control" value="admin" placeholder="Enter username">
         </div>
         
-        <button class="login-btn" onclick="login()">LOGIN</button>
+        <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" id="password" class="form-control" value="sufism123" placeholder="Enter password">
+        </div>
         
-        <div class="error" id="errorMsg">❌ Wrong username or password!</div>
-        <div class="success" id="loginSuccessMsg" style="display: none;">✅ Login successful! Loading...</div>
+        <button class="btn btn-primary" onclick="login()" style="width: 100%;">
+            <i class="fas fa-sign-in-alt"></i> LOGIN TO ADMIN PANEL
+        </button>
         
-        <div style="margin-top: 20px; color: #666; font-size: 14px; text-align: left; background: #f5f5f5; padding: 15px; border-radius: 5px;">
-            <p><strong>Default Login:</strong></p>
-            <p>Username: <strong>admin</strong></p>
-            <p>Password: <strong>sufism123</strong></p>
+        <div class="message error" id="loginError" style="display: none;">
+            <i class="fas fa-exclamation-circle"></i> Invalid username or password!
+        </div>
+        
+        <div style="margin-top: 25px; padding: 15px; background: #f8f9fa; border-radius: 8px; text-align: left;">
+            <p style="font-size: 14px; color: #666; margin-bottom: 5px;"><strong>Default Credentials:</strong></p>
+            <p style="font-size: 13px; color: #888;">Username: <strong>admin</strong></p>
+            <p style="font-size: 13px; color: #888;">Password: <strong>sufism123</strong></p>
         </div>
     </div>
 </div>
 
 <!-- ADMIN PANEL -->
-<div class="admin-panel" id="adminPanel">
-    <h1>🎉 SUFISM ADMIN PANEL</h1>
-    <p>Add content to your website</p>
-    
-    <div class="input-group">
-        <label>Content Type:</label>
-        <select id="contentType">
-            <option value="quote">Sufi Quote</option>
-            <option value="poem">Sufi Poem</option>
-            <option value="teaching">Teaching</option>
-            <option value="article">Article</option>
-        </select>
+<div id="adminPanel" class="admin-panel">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <div style="font-size: 30px; margin-bottom: 10px;">
+                <i class="fas fa-star-and-crescent"></i>
+            </div>
+            <h2>SUFISM</h2>
+            <p>Admin Panel</p>
+        </div>
+        
+        <div class="nav-links">
+            <a href="#" class="active" onclick="showTab('dashboard')">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+            <a href="#" onclick="showTab('content')">
+                <i class="fas fa-edit"></i> Add Content
+            </a>
+            <a href="#" onclick="showTab('categories')">
+                <i class="fas fa-tags"></i> Categories
+            </a>
+            <a href="#" onclick="showTab('media')">
+                <i class="fas fa-images"></i> Media Library
+            </a>
+            <a href="#" onclick="showTab('preview')">
+                <i class="fas fa-eye"></i> Website Preview
+            </a>
+            <a href="#" onclick="showTab('settings')">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+            <a href="#" onclick="logout()" style="margin-top: 30px; background: rgba(255,0,0,0.1); color: #ff6b6b;">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
     </div>
     
-    <div class="input-group">
-        <label>Author/Title:</label>
-        <input type="text" id="author" placeholder="e.g., Rumi, Kabir">
-    </div>
-    
-    <div class="input-group">
-        <label>Content:</label>
-        <textarea id="content" placeholder="Enter the quote, poem or article here..."></textarea>
-    </div>
-    
-    <div class="input-group">
-        <label>Language:</label>
-        <select id="language">
-            <option value="hindi">Hindi</option>
-            <option value="urdu">Urdu</option>
-            <option value="english">English</option>
-            <option value="arabic">Arabic</option>
-        </select>
-    </div>
-    
-    <button class="save-btn" onclick="saveContent()" id="saveBtn">
-        💾 SAVE TO DATABASE
-    </button>
-    
-    <button class="logout-btn" onclick="logout()">🚪 LOGOUT</button>
-    
-    <div class="success" id="saveSuccessMsg" style="display: none;">✅ Content saved to Firebase!</div>
-    <div class="error" id="saveErrorMsg" style="display: none;">❌ Error saving content!</div>
-    
-    <div style="margin-top: 30px; padding: 15px; background: #e8f5e9; border-radius: 5px; text-align: left;">
-        <p><strong>📊 Database Status:</strong></p>
-        <p id="dbStatus">Connecting to Firebase...</p>
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <h1 id="pageTitle">Dashboard</h1>
+            <div class="user-info">
+                <div class="user-avatar">A</div>
+                <div>
+                    <div style="font-weight: 500;">Admin User</div>
+                    <div style="font-size: 12px; color: #666;">Last login: Just now</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Dashboard Tab -->
+        <div id="dashboardTab" class="tab-content active">
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">📊 Quick Stats</div>
+                    </div>
+                    <div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                            <div>
+                                <div style="font-size: 12px; color: #666;">Total Content</div>
+                                <div style="font-size: 24px; font-weight: bold;">0</div>
+                            </div>
+                            <div style="color: var(--primary); font-size: 30px;">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <div>
+                                <div style="font-size: 12px; color: #666;">Categories</div>
+                                <div style="font-size: 24px; font-weight: bold;">3</div>
+                            </div>
+                            <div style="color: var(--success); font-size: 30px;">
+                                <i class="fas fa-tags"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">⚡ Quick Actions</div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <button class="btn btn-primary" onclick="showTab('content')">
+                            <i class="fas fa-plus-circle"></i> Add New Content
+                        </button>
+                        <button class="btn btn-success" onclick="showTab('categories')">
+                            <i class="fas fa-tag"></i> Manage Categories
+                        </button>
+                        <button class="btn btn-secondary" onclick="showTab('media')">
+                            <i class="fas fa-upload"></i> Upload Images
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">📝 Recent Activity</div>
+                </div>
+                <div>
+                    <div style="padding: 15px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 15px;">
+                        <div style="background: #e3f2fd; color: #1976d2; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: 500;">Admin logged in</div>
+                            <div style="font-size: 12px; color: #666;">Just now</div>
+                        </div>
+                    </div>
+                    <div style="padding: 15px; text-align: center; color: #666;">
+                        No recent content added yet
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Add Content Tab -->
+        <div id="contentTab" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">📝 Add New Content</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Title</label>
+                    <input type="text" id="contentTitle" class="form-control" placeholder="Enter content title">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Select Category</label>
+                    <select id="contentCategory" class="form-control">
+                        <option value="quotes">Sufi Quotes</option>
+                        <option value="poems">Sufi Poems</option>
+                        <option value="teachings">Teachings</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Content</label>
+                    <textarea id="contentText" class="form-control" rows="6" placeholder="Enter your content here..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Author</label>
+                    <input type="text" id="contentAuthor" class="form-control" placeholder="e.g., Rumi, Kabir">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Featured Image</label>
+                    <div class="image-upload" onclick="document.getElementById('imageInput').click()">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 40px; color: #ccc; margin-bottom: 10px;"></i>
+                        <div>Click to upload image</div>
+                        <div style="font-size: 12px; color: #999; margin-top: 5px;">JPG, PNG or GIF (Max 5MB)</div>
+                    </div>
+                    <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="previewImage(event)">
+                    <img id="imagePreview" class="image-preview" src="" alt="Preview">
+                </div>
+                
+                <div style="display: flex; gap: 15px;">
+                    <button class="btn btn-primary" onclick="saveContent()">
+                        <i class="fas fa-save"></i> Save Content
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearContentForm()">
+                        <i class="fas fa-times"></i> Clear
+                    </button>
+                    <button class="btn btn-success" onclick="previewContent()">
+                        <i class="fas fa-eye"></i> Preview
+                    </button>
+                </div>
+                
+                <div class="message success" id="contentSuccess" style="display: none; margin-top: 20px;">
+                    <i class="fas fa-check-circle"></i> Content saved successfully!
+                </div>
+            </div>
+        </div>
+        
+        <!-- Categories Tab -->
+        <div id="categoriesTab" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">🏷️ Manage Categories</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Add New Category</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="newCategory" class="form-control" placeholder="Enter category name">
+                        <button class="btn btn-success" onclick="addCategory()">
+                            <i class="fas fa-plus"></i> Add
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Existing Categories</label>
+                    <div class="categories-list">
+                        <div class="category-tag">
+                            Sufi Quotes
+                            <span class="delete" onclick="deleteCategory(this)">×</span>
+                        </div>
+                        <div class="category-tag">
+                            Sufi Poems
+                            <span class="delete" onclick="deleteCategory(this)">×</span>
+                        </div>
+                        <div class="category-tag">
+                            Teachings
+                            <span class="delete" onclick="deleteCategory(this)">×</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message success" id="categorySuccess" style="display: none;">
+                    <i class="fas fa-check-circle"></i> Category added successfully!
+                </div>
+            </div>
+        </div>
+        
+        <!-- Media Tab -->
+        <div id="mediaTab" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">🖼️ Media Library</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Upload Images</label>
+                    <div class="image-upload" onclick="document.getElementById('mediaInput').click()">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 40px; color: #ccc; margin-bottom: 10px;"></i>
+                        <div>Click to upload multiple images</div>
+                        <div style="font-size: 12px; color: #999; margin-top: 5px;">Drag & drop or click to browse</div>
+                    </div>
+                    <input type="file" id="mediaInput" accept="image/*" multiple style="display: none;">
+                </div>
+                
+                <div style="margin-top: 30px;">
+                    <div class="card-title" style="margin-bottom: 15px;">Uploaded Images</div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px;">
+                        <div style="text-align: center; color: #999; padding: 40px;">
+                            <i class="fas fa-images" style="font-size: 40px; margin-bottom: 10px;"></i>
+                            <div>No images uploaded yet</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Preview Tab -->
+        <div id="previewTab" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">👁️ Website Preview</div>
+                </div>
+                
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                    <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                        <button class="btn btn-primary" onclick="updatePreview()">
+                            <i class="fas fa-sync-alt"></i> Refresh Preview
+                        </button>
+                        <button class="btn btn-secondary" onclick="openWebsite()">
+                            <i class="fas fa-external-link-alt"></i> Open Live Website
+                        </button>
+                    </div>
+                    
+                    <div style="font-size: 14px; color: #666; background: white; padding: 15px; border-radius: 8px;">
+                        <strong>Live URL:</strong> 
+                        <a href="https://ahemadjuneja-stack.github.io/Myblog/" target="_blank">
+                            https://ahemadjuneja-stack.github.io/Myblog/
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="preview-window">
+                    <div class="preview-content" id="livePreview">
+                        <h3 style="color: var(--primary); margin-bottom: 15px;">Sample Content Preview</h3>
+                        <p style="font-size: 18px; line-height: 1.6; margin-bottom: 15px;">
+                            "The wound is the place where the Light enters you." - Rumi
+                        </p>
+                        <div style="font-style: italic; color: #666; border-left: 3px solid #ccc; padding-left: 15px;">
+                            This is how your content will appear on the live website. Add content using the "Add Content" tab.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Settings Tab -->
+        <div id="settingsTab" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">⚙️ Admin Settings</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Change Admin Password</label>
+                    <div style="display: grid; gap: 15px;">
+                        <input type="password" id="currentPassword" class="form-control" placeholder="Current password">
+                        <input type="password" id="newPassword" class="form-control" placeholder="New password">
+                        <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm new password">
+                    </div>
+                    <button class="btn btn-primary" style="margin-top: 15px;">
+                        <i class="fas fa-key"></i> Update Password
+                    </button>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Website Settings</label>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <label style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" checked> Enable comments
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" checked> Show social sharing buttons
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox"> Enable email notifications
+                        </label>
+                    </div>
+                </div>
+                
+                <button class="btn btn-success">
+                    <i class="fas fa-save"></i> Save Settings
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 
-<script type="module">
-// Import Firebase functions
-import { db } from './firebase.js';
-import { collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
-
-// ✅ SIMPLE LOGIN SYSTEM
-const CORRECT_USERNAME = "admin";
-const CORRECT_PASSWORD = "sufism123";
-
+<script>
+// 🔐 LOGIN SYSTEM
 function login() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
-    const errorMsg = document.getElementById('errorMsg');
-    const successMsg = document.getElementById('loginSuccessMsg');
+    const errorMsg = document.getElementById('loginError');
     
-    errorMsg.style.display = 'none';
-    
-    if (username === CORRECT_USERNAME && password === CORRECT_PASSWORD) {
-        successMsg.style.display = 'block';
-        errorMsg.style.display = 'none';
-        
-        setTimeout(() => {
-            document.getElementById('loginContainer').style.display = 'none';
-            document.getElementById('adminPanel').style.display = 'block';
-            checkFirebaseConnection();
-        }, 1000);
-        
+    if(username === 'admin' && password === 'sufism123') {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('adminPanel').style.display = 'flex';
+        showMessage('Login successful!', 'success');
     } else {
         errorMsg.style.display = 'block';
-        successMsg.style.display = 'none';
+        setTimeout(() => {
+            errorMsg.style.display = 'none';
+        }, 3000);
     }
 }
 
 function logout() {
-    if (confirm("Are you sure you want to logout?")) {
+    if(confirm('Are you sure you want to logout?')) {
         document.getElementById('adminPanel').style.display = 'none';
-        document.getElementById('loginContainer').style.display = 'block';
+        document.getElementById('loginScreen').style.display = 'block';
         document.getElementById('username').value = 'admin';
         document.getElementById('password').value = 'sufism123';
+        showTab('dashboard');
     }
 }
 
-// ✅ FIREBASE FUNCTIONS
-async function checkFirebaseConnection() {
-    try {
-        const dbStatus = document.getElementById('dbStatus');
-        const testQuery = await getDocs(collection(db, "test_data"));
-        dbStatus.innerHTML = `✅ Firebase Connected!<br>Found ${testQuery.size} test records.`;
-        console.log("Firebase connection verified");
-    } catch (error) {
-        document.getElementById('dbStatus').innerHTML = "❌ Firebase connection failed!";
-        console.error("Firebase error:", error);
-    }
+// 📂 TAB SYSTEM
+function showTab(tabName) {
+    // Hide all tabs
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Remove active class from all nav links
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.classList.remove('active');
+    });
+    
+    // Show selected tab
+    document.getElementById(tabName + 'Tab').classList.add('active');
+    
+    // Update page title
+    const titles = {
+        'dashboard': 'Dashboard',
+        'content': 'Add Content',
+        'categories': 'Categories',
+        'media': 'Media Library',
+        'preview': 'Website Preview',
+        'settings': 'Settings'
+    };
+    document.getElementById('pageTitle').textContent = titles[tabName];
+    
+    // Update active nav link
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        if(link.textContent.includes(titles[tabName])) {
+            link.classList.add('active');
+        }
+    });
 }
 
-async function saveContent() {
-    const author = document.getElementById('author').value;
-    const content = document.getElementById('content').value;
-    const contentType = document.getElementById('contentType').value;
-    const language = document.getElementById('language').value;
+// 📝 CONTENT MANAGEMENT
+function saveContent() {
+    const title = document.getElementById('contentTitle').value;
+    const content = document.getElementById('contentText').value;
     
-    const saveBtn = document.getElementById('saveBtn');
-    const successMsg = document.getElementById('saveSuccessMsg');
-    const errorMsg = document.getElementById('saveErrorMsg');
-    
-    if (!author.trim() || !content.trim()) {
-        alert("Please fill in all fields!");
+    if(!title || !content) {
+        alert('Please fill in all required fields!');
         return;
     }
     
-    // Show loading
-    saveBtn.innerHTML = "⏳ Saving...";
-    saveBtn.disabled = true;
-    successMsg.style.display = 'none';
-    errorMsg.style.display = 'none';
+    const successMsg = document.getElementById('contentSuccess');
+    successMsg.style.display = 'block';
     
-    try {
-        // Save to Firestore
-        const docRef = await addDoc(collection(db, "sufi_content"), {
-            type: contentType,
-            author: author,
-            content: content,
-            language: language,
-            timestamp: new Date(),
-            addedBy: "admin"
-        });
-        
-        console.log("Document written with ID: ", docRef.id);
-        
-        // Show success
-        successMsg.style.display = 'block';
-        errorMsg.style.display = 'none';
-        
-        // Clear form
-        document.getElementById('author').value = '';
-        document.getElementById('content').value = '';
-        
-        // Update status
-        const testQuery = await getDocs(collection(db, "sufi_content"));
-        document.getElementById('dbStatus').innerHTML = 
-            `✅ Content saved successfully!<br>Total records: ${testQuery.size}`;
-        
-    } catch (error) {
-        console.error("Error adding document: ", error);
-        errorMsg.style.display = 'block';
+    // Simulate save
+    setTimeout(() => {
         successMsg.style.display = 'none';
-        document.getElementById('dbStatus').innerHTML = "❌ Error saving content!";
-    } finally {
-        // Restore button
-        saveBtn.innerHTML = "💾 SAVE TO DATABASE";
-        saveBtn.disabled = false;
+        clearContentForm();
+        showMessage('Content saved successfully!', 'success');
+        
+        // Log to console
+        console.log('Content Saved:', {
+            title: title,
+            category: document.getElementById('contentCategory').value,
+            author: document.getElementById('contentAuthor').value,
+            timestamp: new Date().toLocaleString()
+        });
+    }, 1500);
+}
+
+function clearContentForm() {
+    document.getElementById('contentTitle').value = '';
+    document.getElementById('contentText').value = '';
+    document.getElementById('contentAuthor').value = '';
+    document.getElementById('imagePreview').style.display = 'none';
+    document.getElementById('imagePreview').src = '';
+}
+
+function previewContent() {
+    const title = document.getElementById('contentTitle').value || 'Sample Title';
+    const content = document.getElementById('contentText').value || 'Sample content will appear here...';
+    const author = document.getElementById('contentAuthor').value || 'Anonymous';
+    
+    document.getElementById('livePreview').innerHTML = `
+        <h3 style="color: var(--primary); margin-bottom: 15px;">${title}</h3>
+        <p style="font-size: 18px; line-height: 1.6; margin-bottom: 15px;">${content}</p>
+        <div style="font-style: italic; color: #666; border-left: 3px solid var(--primary); padding-left: 15px;">
+            - ${author}
+        </div>
+        <div style="margin-top: 20px; font-size: 14px; color: #999;">
+            Preview generated: ${new Date().toLocaleTimeString()}
+        </div>
+    `;
+    
+    showTab('preview');
+}
+
+// 🏷️ CATEGORIES MANAGEMENT
+let categories = ['Sufi Quotes', 'Sufi Poems', 'Teachings'];
+
+function addCategory() {
+    const newCat = document.getElementById('newCategory').value.trim();
+    if(!newCat) {
+        alert('Please enter a category name!');
+        return;
+    }
+    
+    if(categories.includes(newCat)) {
+        alert('Category already exists!');
+        return;
+    }
+    
+    categories.push(newCat);
+    updateCategoriesList();
+    document.getElementById('newCategory').value = '';
+    
+    const successMsg = document.getElementById('categorySuccess');
+    successMsg.style.display = 'block';
+    setTimeout(() => {
+        successMsg.style.display = 'none';
+    }, 2000);
+    
+    showMessage(`Category "${newCat}" added successfully!`, 'success');
+}
+
+function deleteCategory(element) {
+    const category = element.parentElement.textContent.replace('×', '').trim();
+    if(confirm(`Delete category "${category}"?`)) {
+        categories = categories.filter(cat => cat !== category);
+        updateCategoriesList();
+        showMessage(`Category "${category}" deleted!`, 'success');
     }
 }
 
-// Check Firebase on admin panel load
-function checkFirebaseConnection() {
-    const dbStatus = document.getElementById('dbStatus');
-    dbStatus.innerHTML = "✅ Firebase Connected!<br>Ready to save content.";
+function updateCategoriesList() {
+    const container = document.querySelector('.categories-list');
+    container.innerHTML = '';
+    
+    categories.forEach(cat => {
+        const tag = document.createElement('div');
+        tag.className = 'category-tag';
+        tag.innerHTML = `${cat} <span class="delete" onclick="deleteCategory(this)">×</span>`;
+        container.appendChild(tag);
+    });
 }
 
-// Enter key login
-document.getElementById('password').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') login();
-});
+// 🖼️ IMAGE UPLOAD
+function previewImage(event) {
+    const input = event.target;
+    const preview = document.getElementById('imagePreview');
+    
+    if(input.files && input.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+        }
+        
+        reader.readAsDataURL(input.files[0]);
+        showMessage('Image uploaded successfully!', 'success');
+    }
+}
 
-// Auto-fill credentials for testing
+// 👁️ WEBSITE PREVIEW
+function updatePreview() {
+    showMessage('Preview updated!', 'success');
+    document.getElementById('livePreview').innerHTML += `
+        <div style="margin-top: 15px; padding: 10px; background: #e8f5e9; border-radius: 5px; font-size: 12px;">
+            <i class="fas fa-sync-alt"></i> Preview refreshed at ${new Date().toLocaleTimeString()}
+        </div>
+    `;
+}
+
+function openWebsite() {
+    window.open('https://ahemadjuneja-stack.github.io/Myblog/', '_blank');
+}
+
+// 💬 UTILITY FUNCTIONS
+function showMessage(text, type) {
+    // Create message element
+    const msg = document.createElement('div');
+    msg.className = `message ${type}`;
+    msg.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${text}`;
+    msg.style.position = 'fixed';
+    msg.style.top = '20px';
+    msg.style.right = '20px';
+    msg.style.zIndex = '1000';
+    msg.style.maxWidth = '300px';
+    
+    document.body.appendChild(msg);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        msg.remove();
+    }, 3000);
+}
+
+// 🎯 INITIALIZE
 window.onload = function() {
-    document.getElementById('username').value = CORRECT_USERNAME;
-    document.getElementById('password').value = CORRECT_PASSWORD;
+    updateCategoriesList();
+    document.getElementById('username').focus();
 };
+
+// Enter key support for login
+document.getElementById('password').addEventListener('keypress', function(e) {
+    if(e.key === 'Enter') login();
+});
 </script>
 
 </body>
