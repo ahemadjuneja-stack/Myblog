@@ -1,8 +1,4 @@
-// firebase.js - Firebase Configuration for Myblog
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
-
-// Your Firebase configuration
+// firebase.js - Firebase Configuration (Compatible Version)
 const firebaseConfig = {
   apiKey: "AIzaSyB-RHXlRm0oyihYRP6SukITVYvboKQEPqQ",
   authDomain: "arwa-cf9b4.firebaseapp.com",
@@ -14,8 +10,17 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+} else {
+  firebase.app();
+}
 
-// Export the database instance
-export { db };
+// Get Firestore database
+const db = firebase.firestore();
+
+// Make it available globally
+window.firebase = firebase;
+window.db = db;
+
+console.log("✅ Firebase initialized successfully!");
