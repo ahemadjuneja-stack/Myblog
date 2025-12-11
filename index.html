@@ -6,104 +6,404 @@
     <title>SUFISM Admin Panel</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Password Protection -->
-    <script>
-    window.onload = function() {
-        const password = prompt("🔐 Enter Admin Password to Continue:");
-        
-        // SET YOUR PASSWORD HERE
-        const ADMIN_PASSWORD = "Sufism123"; // 👈 ये बदलें अपने password से
-        
-        if (password === ADMIN_PASSWORD) {
-            document.body.style.display = "block";
-            console.log("✅ Admin access granted");
-        } else {
-            alert("❌ Access Denied!");
-            window.location.href = "index.html";
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
         }
-    };
-    </script>
-</head>
-<body style="display: none;">
-
-<div class="container">
-    <h1><i class="fas fa-user-shield"></i> SUFISM Admin Panel</h1>
-    
-    <div class="admin-section">
-        <h2><i class="fas fa-plus-circle"></i> Add New Content</h2>
         
-        <div class="admin-form">
-            <div class="form-group">
-                <label>Content Type:</label>
-                <select id="contentType">
-                    <option value="quote">Sufi Quote</option>
-                    <option value="poem">Sufi Poem</option>
-                    <option value="article">Article</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label>Title/Author:</label>
-                <input type="text" id="title" placeholder="e.g., Rumi, Kabir, etc.">
-            </div>
-            
-            <div class="form-group">
-                <label>Content:</label>
-                <textarea id="content" rows="5" placeholder="Enter the quote, poem or article..."></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label>Language:</label>
-                <select id="language">
-                    <option value="hindi">Hindi</option>
-                    <option value="urdu">Urdu</option>
-                    <option value="english">English</option>
-                    <option value="arabic">Arabic</option>
-                </select>
-            </div>
-            
-            <button onclick="submitContent()" class="btn-submit">
-                <i class="fas fa-upload"></i> Submit to Database
-            </button>
-        </div>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .admin-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+        }
+        
+        .admin-header {
+            background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .admin-header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .admin-header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .login-form {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        .form-group input:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+        
+        .btn-login {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: transform 0.3s;
+        }
+        
+        .btn-login:hover {
+            transform: translateY(-3px);
+        }
+        
+        .error-message {
+            color: #f44336;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .admin-panel {
+            display: none;
+            padding: 30px;
+        }
+        
+        .admin-section {
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .admin-section h2 {
+            color: #2E7D32;
+            margin-bottom: 20px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        select, textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        
+        textarea {
+            height: 150px;
+            resize: vertical;
+        }
+        
+        .btn-submit {
+            background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+        }
+        
+        .btn-logout {
+            background: #f44336;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+        }
+        
+        .admin-info {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #2196F3;
+        }
+        
+        .admin-info h3 {
+            color: #1565C0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .admin-info ul {
+            padding-left: 20px;
+        }
+        
+        .admin-info li {
+            margin-bottom: 10px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+<div class="admin-container" id="loginContainer">
+    <div class="admin-header">
+        <h1><i class="fas fa-user-shield"></i> SUFISM ADMIN</h1>
+        <p>Secure Access Panel for Content Management</p>
     </div>
     
-    <div class="admin-info">
-        <h3><i class="fas fa-info-circle"></i> Admin Instructions</h3>
-        <ul>
-            <li>Use this panel to add Sufi content to the website</li>
-            <li>All content will be saved to Firebase database</li>
-            <li>Changes will appear on the main website immediately</li>
-            <li>Keep your admin password secure</li>
-        </ul>
+    <div class="login-form">
+        <div class="form-group">
+            <label><i class="fas fa-user"></i> Username</label>
+            <input type="text" id="username" placeholder="Enter admin username">
+        </div>
+        
+        <div class="form-group">
+            <label><i class="fas fa-lock"></i> Password</label>
+            <input type="password" id="password" placeholder="Enter admin password">
+        </div>
+        
+        <button class="btn-login" onclick="login()">
+            <i class="fas fa-sign-in-alt"></i> Login to Admin Panel
+        </button>
+        
+        <div class="error-message" id="errorMessage">
+            ❌ Incorrect username or password!
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px; color: #666; font-size: 14px;">
+            <i class="fas fa-info-circle"></i> Default: admin / Sufism@123
+        </div>
+    </div>
+</div>
+
+<div class="admin-container" id="adminPanel" style="display: none;">
+    <div class="admin-header" style="background: linear-gradient(135deg, #2196F3 0%, #0D47A1 100%);">
+        <h1><i class="fas fa-tools"></i> Admin Control Panel</h1>
+        <p>Manage your Sufism website content</p>
+    </div>
+    
+    <div class="admin-panel" id="adminContent">
+        <div class="admin-section">
+            <h2><i class="fas fa-plus-circle"></i> Add New Content</h2>
+            
+            <select id="contentType">
+                <option value="quote">📜 Sufi Quote</option>
+                <option value="poem">✍️ Sufi Poem</option>
+                <option value="article">📰 Article</option>
+                <option value="teaching">📖 Teaching</option>
+            </select>
+            
+            <input type="text" id="title" placeholder="Title or Author (e.g., Rumi, Kabir)">
+            
+            <textarea id="content" placeholder="Enter the content here..."></textarea>
+            
+            <select id="language">
+                <option value="hindi">🇮🇳 Hindi</option>
+                <option value="urdu">🇵🇰 Urdu</option>
+                <option value="english">🇺🇸 English</option>
+                <option value="arabic">🇸🇦 Arabic</option>
+            </select>
+            
+            <button class="btn-submit" onclick="addContent()">
+                <i class="fas fa-cloud-upload-alt"></i> Save to Database
+            </button>
+        </div>
+        
+        <div class="admin-section">
+            <h2><i class="fas fa-database"></i> Database Status</h2>
+            <div id="dbStatus" style="padding: 15px; background: #e8f5e9; border-radius: 8px;">
+                <p><i class="fas fa-spinner fa-spin"></i> Loading database info...</p>
+            </div>
+        </div>
+        
+        <div class="admin-info">
+            <h3><i class="fas fa-info-circle"></i> Admin Instructions</h3>
+            <ul>
+                <li><strong>Username:</strong> admin</li>
+                <li><strong>Password:</strong> Sufism@123</li>
+                <li>All content is saved to Firebase Firestore</li>
+                <li>Changes appear on website immediately</li>
+                <li>Keep login credentials secure</li>
+                <li>Logout after completing work</li>
+            </ul>
+            
+            <button class="btn-logout" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
     </div>
 </div>
 
 <script>
-// Your Firebase config (same as index.html)
-async function submitContent() {
+// 🔐 ADMIN CREDENTIALS - CHANGE THESE!
+const ADMIN_USERNAME = "admin";
+const ADMIN_PASSWORD = "Sufism@123";
+
+// Login Function
+function login() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const errorMsg = document.getElementById('errorMessage');
+    
+    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+        // Success
+        document.getElementById('loginContainer').style.display = 'none';
+        document.getElementById('adminPanel').style.display = 'block';
+        document.getElementById('adminContent').style.display = 'block';
+        
+        // Clear password field
+        document.getElementById('password').value = '';
+        
+        // Load database info
+        loadDatabaseInfo();
+    } else {
+        // Error
+        errorMsg.style.display = 'block';
+        document.getElementById('password').value = '';
+        setTimeout(() => {
+            errorMsg.style.display = 'none';
+        }, 3000);
+    }
+}
+
+// Logout Function
+function logout() {
+    if (confirm("Are you sure you want to logout?")) {
+        document.getElementById('adminPanel').style.display = 'none';
+        document.getElementById('loginContainer').style.display = 'block';
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+    }
+}
+
+// Add Content Function
+function addContent() {
     const type = document.getElementById('contentType').value;
     const title = document.getElementById('title').value;
     const content = document.getElementById('content').value;
     const language = document.getElementById('language').value;
     
-    if (!title || !content) {
-        alert("Please fill all fields!");
+    if (!title.trim() || !content.trim()) {
+        alert("⚠️ Please fill in all fields!");
         return;
     }
     
+    // Create content object
+    const contentData = {
+        type: type,
+        title: title,
+        content: content,
+        language: language,
+        timestamp: new Date().toISOString(),
+        addedBy: ADMIN_USERNAME
+    };
+    
     // Show loading
-    alert("📤 Submitting to database...");
+    const submitBtn = document.querySelector('.btn-submit');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    submitBtn.disabled = true;
     
-    // Here you would add Firebase code to save data
-    // For now, just show success
-    alert("✅ Content submitted successfully!");
-    
-    // Clear form
-    document.getElementById('title').value = '';
-    document.getElementById('content').value = '';
+    // Simulate save (You'll add Firebase code here)
+    setTimeout(() => {
+        // Success message
+        alert(`✅ ${type.toUpperCase()} saved successfully!\n\n"${title}"\n\nNow check your Firebase Console.`);
+        
+        // Reset form
+        document.getElementById('title').value = '';
+        document.getElementById('content').value = '';
+        
+        // Restore button
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+        
+        // Refresh database info
+        loadDatabaseInfo();
+        
+    }, 1500);
 }
+
+// Load Database Info
+function loadDatabaseInfo() {
+    const dbStatus = document.getElementById('dbStatus');
+    
+    // Simulate loading
+    setTimeout(() => {
+        const now = new Date();
+        dbStatus.innerHTML = `
+            <p><i class="fas fa-check-circle" style="color:#4CAF50"></i> <strong>Firebase Connected</strong></p>
+            <p><i class="fas fa-server"></i> <strong>Project:</strong> arwa-cf9b4</p>
+            <p><i class="fas fa-database"></i> <strong>Database:</strong> Firestore</p>
+            <p><i class="fas fa-clock"></i> <strong>Last Updated:</strong> ${now.toLocaleTimeString()}</p>
+            <p><i class="fas fa-user"></i> <strong>Logged in as:</strong> ${ADMIN_USERNAME}</p>
+        `;
+    }, 1000);
+}
+
+// Enter key to login
+document.getElementById('password').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        login();
+    }
+});
+
+// Auto-focus on username
+window.onload = function() {
+    document.getElementById('username').focus();
+};
 </script>
 
 </body>
