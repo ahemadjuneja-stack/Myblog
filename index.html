@@ -213,4 +213,330 @@ window.onload = function() {
 </script>
 
 </body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUFISM Admin Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .login-box, .admin-panel {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: bold;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+        
+        textarea {
+            height: 150px;
+            resize: vertical;
+        }
+        
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        
+        .login-btn {
+            background: #4CAF50;
+            color: white;
+            width: 100%;
+        }
+        
+        .save-btn {
+            background: #2196F3;
+            color: white;
+        }
+        
+        .logout-btn {
+            background: #f44336;
+            color: white;
+        }
+        
+        .error {
+            color: red;
+            margin: 10px 0;
+            display: none;
+        }
+        
+        .success {
+            color: green;
+            margin: 10px 0;
+            display: none;
+        }
+        
+        #loginContainer {
+            display: block;
+        }
+        
+        #adminPanel {
+            display: none;
+        }
+    </style>
+    
+    <!-- Firebase Connection -->
+    <script type="module" src="firebase.js"></script>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="loginContainer">
+    <div class="login-box">
+        <h1>🔐 SUFISM ADMIN LOGIN</h1>
+        
+        <div class="input-group">
+            <label>Username:</label>
+            <input type="text" id="username" value="admin">
+        </div>
+        
+        <div class="input-group">
+            <label>Password:</label>
+            <input type="password" id="password" value="sufism123">
+        </div>
+        
+        <button class="login-btn" onclick="login()">LOGIN</button>
+        
+        <div class="error" id="errorMsg">❌ Wrong username or password!</div>
+        <div class="success" id="loginSuccessMsg" style="display: none;">✅ Login successful! Loading...</div>
+        
+        <div style="margin-top: 20px; color: #666; font-size: 14px; text-align: left; background: #f5f5f5; padding: 15px; border-radius: 5px;">
+            <p><strong>Default Login:</strong></p>
+            <p>Username: <strong>admin</strong></p>
+            <p>Password: <strong>sufism123</strong></p>
+        </div>
+    </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="admin-panel" id="adminPanel">
+    <h1>🎉 SUFISM ADMIN PANEL</h1>
+    <p>Add content to your website</p>
+    
+    <div class="input-group">
+        <label>Content Type:</label>
+        <select id="contentType">
+            <option value="quote">Sufi Quote</option>
+            <option value="poem">Sufi Poem</option>
+            <option value="teaching">Teaching</option>
+            <option value="article">Article</option>
+        </select>
+    </div>
+    
+    <div class="input-group">
+        <label>Author/Title:</label>
+        <input type="text" id="author" placeholder="e.g., Rumi, Kabir">
+    </div>
+    
+    <div class="input-group">
+        <label>Content:</label>
+        <textarea id="content" placeholder="Enter the quote, poem or article here..."></textarea>
+    </div>
+    
+    <div class="input-group">
+        <label>Language:</label>
+        <select id="language">
+            <option value="hindi">Hindi</option>
+            <option value="urdu">Urdu</option>
+            <option value="english">English</option>
+            <option value="arabic">Arabic</option>
+        </select>
+    </div>
+    
+    <button class="save-btn" onclick="saveContent()" id="saveBtn">
+        💾 SAVE TO DATABASE
+    </button>
+    
+    <button class="logout-btn" onclick="logout()">🚪 LOGOUT</button>
+    
+    <div class="success" id="saveSuccessMsg" style="display: none;">✅ Content saved to Firebase!</div>
+    <div class="error" id="saveErrorMsg" style="display: none;">❌ Error saving content!</div>
+    
+    <div style="margin-top: 30px; padding: 15px; background: #e8f5e9; border-radius: 5px; text-align: left;">
+        <p><strong>📊 Database Status:</strong></p>
+        <p id="dbStatus">Connecting to Firebase...</p>
+    </div>
+</div>
+
+<script type="module">
+// Import Firebase functions
+import { db } from './firebase.js';
+import { collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+// ✅ SIMPLE LOGIN SYSTEM
+const CORRECT_USERNAME = "admin";
+const CORRECT_PASSWORD = "sufism123";
+
+function login() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const errorMsg = document.getElementById('errorMsg');
+    const successMsg = document.getElementById('loginSuccessMsg');
+    
+    errorMsg.style.display = 'none';
+    
+    if (username === CORRECT_USERNAME && password === CORRECT_PASSWORD) {
+        successMsg.style.display = 'block';
+        errorMsg.style.display = 'none';
+        
+        setTimeout(() => {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'block';
+            checkFirebaseConnection();
+        }, 1000);
+        
+    } else {
+        errorMsg.style.display = 'block';
+        successMsg.style.display = 'none';
+    }
+}
+
+function logout() {
+    if (confirm("Are you sure you want to logout?")) {
+        document.getElementById('adminPanel').style.display = 'none';
+        document.getElementById('loginContainer').style.display = 'block';
+        document.getElementById('username').value = 'admin';
+        document.getElementById('password').value = 'sufism123';
+    }
+}
+
+// ✅ FIREBASE FUNCTIONS
+async function checkFirebaseConnection() {
+    try {
+        const dbStatus = document.getElementById('dbStatus');
+        const testQuery = await getDocs(collection(db, "test_data"));
+        dbStatus.innerHTML = `✅ Firebase Connected!<br>Found ${testQuery.size} test records.`;
+        console.log("Firebase connection verified");
+    } catch (error) {
+        document.getElementById('dbStatus').innerHTML = "❌ Firebase connection failed!";
+        console.error("Firebase error:", error);
+    }
+}
+
+async function saveContent() {
+    const author = document.getElementById('author').value;
+    const content = document.getElementById('content').value;
+    const contentType = document.getElementById('contentType').value;
+    const language = document.getElementById('language').value;
+    
+    const saveBtn = document.getElementById('saveBtn');
+    const successMsg = document.getElementById('saveSuccessMsg');
+    const errorMsg = document.getElementById('saveErrorMsg');
+    
+    if (!author.trim() || !content.trim()) {
+        alert("Please fill in all fields!");
+        return;
+    }
+    
+    // Show loading
+    saveBtn.innerHTML = "⏳ Saving...";
+    saveBtn.disabled = true;
+    successMsg.style.display = 'none';
+    errorMsg.style.display = 'none';
+    
+    try {
+        // Save to Firestore
+        const docRef = await addDoc(collection(db, "sufi_content"), {
+            type: contentType,
+            author: author,
+            content: content,
+            language: language,
+            timestamp: new Date(),
+            addedBy: "admin"
+        });
+        
+        console.log("Document written with ID: ", docRef.id);
+        
+        // Show success
+        successMsg.style.display = 'block';
+        errorMsg.style.display = 'none';
+        
+        // Clear form
+        document.getElementById('author').value = '';
+        document.getElementById('content').value = '';
+        
+        // Update status
+        const testQuery = await getDocs(collection(db, "sufi_content"));
+        document.getElementById('dbStatus').innerHTML = 
+            `✅ Content saved successfully!<br>Total records: ${testQuery.size}`;
+        
+    } catch (error) {
+        console.error("Error adding document: ", error);
+        errorMsg.style.display = 'block';
+        successMsg.style.display = 'none';
+        document.getElementById('dbStatus').innerHTML = "❌ Error saving content!";
+    } finally {
+        // Restore button
+        saveBtn.innerHTML = "💾 SAVE TO DATABASE";
+        saveBtn.disabled = false;
+    }
+}
+
+// Check Firebase on admin panel load
+function checkFirebaseConnection() {
+    const dbStatus = document.getElementById('dbStatus');
+    dbStatus.innerHTML = "✅ Firebase Connected!<br>Ready to save content.";
+}
+
+// Enter key login
+document.getElementById('password').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') login();
+});
+
+// Auto-fill credentials for testing
+window.onload = function() {
+    document.getElementById('username').value = CORRECT_USERNAME;
+    document.getElementById('password').value = CORRECT_PASSWORD;
+};
+</script>
+
+</body>
 </html>
