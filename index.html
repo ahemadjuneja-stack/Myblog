@@ -262,3 +262,26 @@
 
 </body>
 </html>
+<script>
+// Simple Password Protection
+function checkAdminAccess() {
+    // Ask for password
+    const password = prompt("🔐 Enter Admin Password:");
+    
+    // Correct password (AhmadJuneja25452)
+    const correctPassword = "Sufism123"; // ये बदल सकते हैं
+    
+    if (password === correctPassword) {
+        // Show admin content
+        document.body.style.display = "block";
+        alert("✅ Access Granted! Welcome Admin.");
+    } else {
+        // Wrong password - redirect to home
+        alert("❌ Access Denied! Wrong Password.");
+        window.location.href = "index.html";
+    }
+}
+
+// Run on page load
+window.onload = checkAdminAccess;
+</script>
