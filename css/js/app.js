@@ -1,123 +1,65 @@
 // DOM Elements
-const categoriesContainer = document.getElementById('categoriesContainer');
-const featuredPosts = document.getElementById('featuredPosts');
-const recentPosts = document.getElementById('recentPosts');
+const quranPosts = document.getElementById('quranPosts');
+const hadeesPosts = document.getElementById('hadeesPosts');
 
 // Initialize App
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Islamic Notes Platform Loaded');
+    console.log('Ummat-e-Nabi Platform Loaded');
     
-    // Load categories
-    loadCategories();
+    // Load Quran posts
+    loadQuranPosts();
     
-    // Load featured posts
-    loadFeaturedPosts();
+    // Load Hadees posts
+    loadHadeesPosts();
     
-    // Load recent posts
-    loadRecentPosts();
-    
-    // Setup mobile menu
-    setupMobileMenu();
+    // Check authentication status
+    checkAuthStatus();
 });
 
-// Load Categories
-async function loadCategories() {
+// Load Quran Posts
+async function loadQuranPosts() {
     try {
-        const categories = [
-            { id: 'quran', name: 'Quran Tafseer', icon: 'fas fa-book-quran', count: 0 },
-            { id: 'hadith', name: 'Hadith Collection', icon: 'fas fa-book', count: 0 },
-            { id: 'fiqh', name: 'Fiqh & Jurisprudence', icon: 'fas fa-balance-scale', count: 0 },
-            { id: 'seerah', name: 'Seerah & History', icon: 'fas fa-history', count: 0 },
-            { id: 'duas', name: 'Duas & Supplications', icon: 'fas fa-hands-praying', count: 0 },
-            { id: 'salah', name: 'Salah & Worship', icon: 'fas fa-mosque', count: 0 },
-            { id: 'character', name: 'Islamic Character', icon: 'fas fa-heart', count: 0 },
-            { id: 'family', name: 'Family & Society', icon: 'fas fa-users', count: 0 }
-        ];
-
-        // Get post count for each category
-        for (let category of categories) {
-            const querySnapshot = await db.collection('posts')
-                .where('category', '==', category.id)
-                .where('published', '==', true)
-                .get();
-            category.count = querySnapshot.size;
-        }
-
-        // Display categories
-        displayCategories(categories);
+        const querySnapshot = await db.collection('posts')
+            .where('type', '==', 'quran')
+            .orderBy('date', 'desc')
+            .limit(10)
+            .get();
+        
+        displayPosts(querySnapshot, quranPosts, 'quran');
     } catch (error) {
-        console.error('Error loading categories:', error);
-        categoriesContainer.innerHTML = '<div class="error">Error loading categories. Please refresh.</div>';
+        console.error('Error loading Quran posts:', error);
+        quranPosts.innerHTML = '<div class="error">Error loading Quran verses. Please refresh.</div>';
     }
 }
 
-// Display Categories
-function displayCategories(categories) {
-    categoriesContainer.innerHTML = '';
-    
-    categories.forEach(category => {
-        const categoryCard = document.createElement('div');
-        categoryCard.className = 'category-card';
-        categoryCard.setAttribute('data-category', category.id);
-        categoryCard.onclick = () => window.location.href = `categories.html?category=${category.id}`;
-        
-        categoryCard.innerHTML = `
-            <div class="category-icon">
-                <i class="${category.icon}"></i>
-            </div>
-            <h3>${category.name}</h3>
-            <div class="category-count">${category.count} Notes</div>
-        `;
-        
-        categoriesContainer.appendChild(categoryCard);
-    });
-}
-
-// Load Featured Posts
-async function loadFeaturedPosts() {
+// Load Hadees Posts
+async function loadHadeesPosts() {
     try {
         const querySnapshot = await db.collection('posts')
-            .where('featured', '==', true)
-            .where('published', '==', true)
-            .orderBy('createdAt', 'desc')
-            .limit(6)
+            .where('type', '==', 'hadees')
+            .orderBy('date', 'desc')
+            .limit(10)
             .get();
         
-        displayPosts(querySnapshot, featuredPosts);
+        displayPosts(querySnapshot, hadeesPosts, 'hadees');
     } catch (error) {
-        console.error('Error loading featured posts:', error);
-        featuredPosts.innerHTML = '<div class="error">Error loading featured posts.</div>';
-    }
-}
-
-// Load Recent Posts
-async function loadRecentPosts() {
-    try {
-        const querySnapshot = await db.collection('posts')
-            .where('published', '==', true)
-            .orderBy('createdAt', 'desc')
-            .limit(6)
-            .get();
-        
-        displayPosts(querySnapshot, recentPosts);
-    } catch (error) {
-        console.error('Error loading recent posts:', error);
-        recentPosts.innerHTML = '<div class="error">Error loading recent posts.</div>';
+        console.error('Error loading Hadees posts:', error);
+        hadeesPosts.innerHTML = '<div class="error">Error loading Hadees. Please refresh.</div>';
     }
 }
 
 // Display Posts
-function displayPosts(querySnapshot, container) {
+function displayPosts(querySnapshot, container, type) {
     container.innerHTML = '';
     
     if (querySnapshot.empty) {
         container.innerHTML = `
             <div class="no-posts" style="grid-column: 1 / -1; text-align: center; padding: 40px;">
-                <i class="fas fa-book-open" style="font-size: 3rem; color: #2E8B57; margin-bottom: 20px;"></i>
-                <h3 style="color: #0A2647;">No notes available yet</h3>
+                <i class="fas fa-book${type === 'quran' ? '-quran' : ''}" style="font-size: 3rem; color: #2E8B57; margin-bottom: 20px;"></i>
+                <h3 style="color: #0A2647;">No ${type === 'quran' ? 'Quran verses' : 'Hadees'} available yet</h3>
                 <p style="color: #666;">Be the first to share Islamic knowledge!</p>
-                <a href="admin.html" class="btn-primary" style="margin-top: 20px;">
-                    <i class="fas fa-plus-circle"></i> Add First Note
+                <a href="admin.html" class="btn-post" style="margin-top: 20px;">
+                    <i class="fas fa-plus-circle"></i> Add First ${type === 'quran' ? 'Quran Verse' : 'Hadees'}
                 </a>
             </div>
         `;
@@ -131,96 +73,78 @@ function displayPosts(querySnapshot, container) {
         const postCard = document.createElement('div');
         postCard.className = 'post-card';
         
-        const formattedDate = new Date(post.createdAt?.toDate()).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-        });
+        // Format date
+        let formattedDate = 'Recent';
+        if (post.date && post.date.toDate) {
+            const date = post.date.toDate();
+            formattedDate = date.toLocaleDateString('en-US', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            });
+        } else if (post.date) {
+            formattedDate = post.date;
+        }
+        
+        // Get icon based on type
+        const typeIcon = type === 'quran' ? 'fa-book-quran' : 'fa-book';
+        const typeText = type === 'quran' ? 'Quran' : 'Hadees';
         
         postCard.innerHTML = `
-            <div class="post-image">
-                ${post.imageUrl ? 
-                    `<img src="${post.imageUrl}" alt="${post.title}" style="width: 100%; height: 100%; object-fit: cover;">` : 
-                    `<div style="width: 100%; height: 100%; background: linear-gradient(135deg, #2E8B57, #0A2647); display: flex; align-items: center; justify-content: center; color: white;">
-                        <i class="fas fa-book-open" style="font-size: 3rem;"></i>
-                    </div>`
-                }
-            </div>
             <div class="post-content">
-                <h3 class="post-title">${post.title}</h3>
-                <p class="post-excerpt">${post.excerpt || post.content.substring(0, 150)}...</p>
-                <div class="post-meta">
-                    <span class="post-category">${getCategoryName(post.category)}</span>
-                    <span class="post-date">${formattedDate}</span>
-                </div>
+                <p class="post-title">${post.content || post.title}</p>
+                ${post.reference ? `<div class="post-reference">${post.reference}</div>` : ''}
+            </div>
+            <div class="post-meta">
+                <span class="post-type"><i class="fas ${typeIcon}"></i> ${typeText}</span>
+                <span class="post-date"><i class="far fa-calendar"></i> ${formattedDate}</span>
             </div>
         `;
         
-        postCard.onclick = () => viewPost(postId);
         container.appendChild(postCard);
     });
 }
 
-// Get Category Name
-function getCategoryName(categoryId) {
-    const categories = {
-        'quran': 'Quran',
-        'hadith': 'Hadith',
-        'fiqh': 'Fiqh',
-        'seerah': 'Seerah',
-        'duas': 'Duas',
-        'salah': 'Salah',
-        'character': 'Character',
-        'family': 'Family'
-    };
-    return categories[categoryId] || 'Islamic Notes';
+// Check Authentication Status
+function checkAuthStatus() {
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            console.log('User is logged in:', user.email);
+            // You can show admin link or other privileged content
+        } else {
+            console.log('User is not logged in');
+        }
+    });
 }
 
-// View Single Post
-function viewPost(postId) {
-    window.location.href = `post.html?id=${postId}`;
-}
-
-// Setup Mobile Menu
-function setupMobileMenu() {
-    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-    const navMenu = document.querySelector('.nav-menu');
-    
-    if (mobileMenuBtn && navMenu) {
-        mobileMenuBtn.addEventListener('click', () => {
-            navMenu.style.display = navMenu.style.display === 'flex' ? 'none' : 'flex';
-            if (navMenu.style.display === 'flex') {
-                navMenu.style.flexDirection = 'column';
-                navMenu.style.position = 'absolute';
-                navMenu.style.top = '100%';
-                navMenu.style.left = '0';
-                navMenu.style.right = '0';
-                navMenu.style.backgroundColor = 'white';
-                navMenu.style.padding = '20px';
-                navMenu.style.boxShadow = '0 10px 20px rgba(0,0,0,0.1)';
-            }
-        });
-        
-        // Close menu on window resize
-        window.addEventListener('resize', () => {
-            if (window.innerWidth > 768) {
-                navMenu.style.display = '';
-            }
-        });
+// Search Functionality (if needed)
+function performSearch() {
+    const searchInput = document.querySelector('.search-input');
+    if (searchInput) {
+        const query = searchInput.value.trim();
+        if (query) {
+            // Implement search functionality here
+            console.log('Searching for:', query);
+        }
     }
 }
 
-// Search Functionality
-document.querySelector('.nav-search button')?.addEventListener('click', performSearch);
-document.querySelector('.nav-search input')?.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') performSearch();
-});
-
-function performSearch() {
-    const searchInput = document.querySelector('.nav-search input');
-    const query = searchInput.value.trim();
-    
-    if (query) {
-        window.location.href = `categories.html?search=${encodeURIComponent(query)}`;
+// Share functionality
+function sharePost(postId, title) {
+    if (navigator.share) {
+        navigator.share({
+            title: 'Ummat-e-Nabi ﷺ',
+            text: title,
+            url: window.location.href + '?post=' + postId
+        });
+    } else {
+        // Fallback: Copy to clipboard
+        const textArea = document.createElement('textarea');
+        textArea.value = title + '\n\n' + window.location.href;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        alert('Post link copied to clipboard!');
     }
 }
