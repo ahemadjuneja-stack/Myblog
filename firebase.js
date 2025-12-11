@@ -1,4 +1,4 @@
-// firebase.js - Firebase Configuration (Compatible Version)
+// firebase.js - FINAL VERSION
 const firebaseConfig = {
   apiKey: "AIzaSyB-RHXlRm0oyihYRP6SukITVYvboKQEPqQ",
   authDomain: "arwa-cf9b4.firebaseapp.com",
