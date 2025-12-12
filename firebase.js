@@ -1,26 +1,17 @@
-// firebase.js - FINAL VERSION
+// Firebase Configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyB-RHXlRm0oyihYRP6SukITVYvboKQEPqQ",
-  authDomain: "arwa-cf9b4.firebaseapp.com",
-  projectId: "arwa-cf9b4",
-  storageBucket: "arwa-cf9b4.firebasestorage.app",
-  messagingSenderId: "584664513506",
-  appId: "1:584664513506:web:8399cf1e62dc8cc7a0d7bb",
-  measurementId: "G-HFWGFHEMVK"
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID"
 };
 
 // Initialize Firebase
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-} else {
-  firebase.app();
-}
-
-// Get Firestore database
+firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// Make it available globally
-window.firebase = firebase;
-window.db = db;
-
-console.log("✅ Firebase initialized successfully!");
+// Collections
+const articlesCollection = db.collection('articles');
+const statsCollection = db.collection('stats');
