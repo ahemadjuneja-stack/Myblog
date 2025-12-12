@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sufism Blog - Spiritual Wisdom</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Sufism Blog - Islamic Wisdom</title>
+    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Navigation Bar -->
+    <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
@@ -16,132 +16,47 @@
                 <span>Sufism Blog</span>
             </div>
             <ul class="nav-menu">
-                <li><a href="#home" class="active">Home</a></li>
-                <li><a href="#posts">Articles</a></li>
-                <li><a href="#categories">Categories</a></li>
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="#articles">Articles</a></li>
                 <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="admin-login.html">Admin</a></li>
             </ul>
-            <div class="search-box">
-                <input type="text" placeholder="Search...">
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Search articles...">
                 <i class="fas fa-search"></i>
-            </div>
-            <div class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="hero-content">
-            <h1 class="hero-title">Welcome to Sufism Blog</h1>
-            <p class="hero-subtitle">Discover the path of spiritual enlightenment and divine wisdom</p>
-            <button class="cta-button">Explore Articles</button>
+    <section class="hero">
+        <div class="hero-overlay">
+            <h1 class="hero-title">Sufism Blog</h1>
+            <p class="hero-subtitle">Discover the Path of Spiritual Enlightenment</p>
         </div>
     </section>
 
-    <!-- Featured Posts Section -->
-    <section class="featured-posts" id="posts">
+    <!-- Articles Section -->
+    <section class="articles-section" id="articles">
         <div class="container">
-            <h2 class="section-title">Featured Articles</h2>
-            <div class="posts-grid">
-                <!-- Post Card 1 -->
-                <article class="post-card">
-                    <div class="post-image">
-                        <img src="https://images.unsplash.com/photo-1542816417-0983c9c9ad53?w=600" alt="Sufism">
-                        <span class="post-category">Spirituality</span>
-                    </div>
-                    <div class="post-content">
-                        <div class="post-meta">
-                            <span><i class="far fa-calendar"></i> Dec 12, 2025</span>
-                            <span><i class="far fa-clock"></i> 5 min read</span>
-                        </div>
-                        <h3 class="post-title">The Path of Love in Sufism</h3>
-                        <p class="post-excerpt">Explore the profound teachings of love and devotion in Sufi traditions...</p>
-                        <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </article>
-
-                <!-- Post Card 2 -->
-                <article class="post-card">
-                    <div class="post-image">
-                        <img src="https://images.unsplash.com/photo-1518176258769-f227c798150e?w=600" alt="Meditation">
-                        <span class="post-category">Practices</span>
-                    </div>
-                    <div class="post-content">
-                        <div class="post-meta">
-                            <span><i class="far fa-calendar"></i> Dec 10, 2025</span>
-                            <span><i class="far fa-clock"></i> 7 min read</span>
-                        </div>
-                        <h3 class="post-title">Dhikr: The Art of Remembrance</h3>
-                        <p class="post-excerpt">Learn about the sacred practice of dhikr and its transformative power...</p>
-                        <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </article>
-
-                <!-- Post Card 3 -->
-                <article class="post-card">
-                    <div class="post-image">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600" alt="Wisdom">
-                        <span class="post-category">Wisdom</span>
-                    </div>
-                    <div class="post-content">
-                        <div class="post-meta">
-                            <span><i class="far fa-calendar"></i> Dec 8, 2025</span>
-                            <span><i class="far fa-clock"></i> 6 min read</span>
-                        </div>
-                        <h3 class="post-title">Rumi's Teachings on Unity</h3>
-                        <p class="post-excerpt">Discover the timeless wisdom of Rumi and the concept of divine unity...</p>
-                        <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </article>
-
-                <!-- Add more post cards as needed -->
+            <h2 class="section-title">Latest Articles</h2>
+            
+            <!-- Loading Spinner -->
+            <div id="loadingSpinner" class="loading-spinner">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Loading articles...</p>
             </div>
-        </div>
-    </section>
 
-    <!-- Categories Section -->
-    <section class="categories" id="categories">
-        <div class="container">
-            <h2 class="section-title">Explore by Category</h2>
-            <div class="categories-grid">
-                <div class="category-card">
-                    <i class="fas fa-heart"></i>
-                    <h3>Spirituality</h3>
-                    <p>15 Articles</p>
-                </div>
-                <div class="category-card">
-                    <i class="fas fa-praying-hands"></i>
-                    <h3>Practices</h3>
-                    <p>12 Articles</p>
-                </div>
-                <div class="category-card">
-                    <i class="fas fa-book-open"></i>
-                    <h3>Wisdom</h3>
-                    <p>20 Articles</p>
-                </div>
-                <div class="category-card">
-                    <i class="fas fa-users"></i>
-                    <h3>Masters</h3>
-                    <p>8 Articles</p>
-                </div>
+            <!-- Articles Grid -->
+            <div id="articlesContainer" class="articles-grid">
+                <!-- Articles will be loaded here dynamically from Firebase -->
             </div>
-        </div>
-    </section>
 
-    <!-- Newsletter Section -->
-    <section class="newsletter">
-        <div class="container">
-            <h2>Subscribe to Our Newsletter</h2>
-            <p>Get the latest articles delivered to your inbox</p>
-            <form class="newsletter-form">
-                <input type="email" placeholder="Enter your email">
-                <button type="submit">Subscribe</button>
-            </form>
+            <!-- No Articles Message -->
+            <div id="noArticles" class="no-articles" style="display: none;">
+                <i class="fas fa-inbox"></i>
+                <p>No articles found. Check back soon!</p>
+            </div>
         </div>
     </section>
 
@@ -162,16 +77,10 @@
                 <div class="footer-section">
                     <h3>Quick Links</h3>
                     <ul>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Contact</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#articles">Articles</a></li>
+                        <li><a href="admin-login.html">Admin Login</a></li>
                     </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>Contact</h3>
-                    <p><i class="fas fa-envelope"></i> info@sufismblog.com</p>
-                    <p><i class="fas fa-phone"></i> +91 XXXXXXXXXX</p>
                 </div>
             </div>
             <div class="footer-bottom">
@@ -180,6 +89,10 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="firebase.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
