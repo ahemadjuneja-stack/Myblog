@@ -3,94 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SUFISM Admin</title>
-    <style>
-        body {
-            font-family: Arial;
-            background: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        
-        .login-box {
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            width: 300px;
-        }
-        
-        h2 {
-            color: #4CAF50;
-            text-align: center;
-        }
-        
-        input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        
-        button {
-            width: 100%;
-            padding: 10px;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        
-        .message {
-            text-align: center;
-            margin-top: 10px;
-            color: red;
-        }
-    </style>
+    <title>Admin Login - Sufism Blog</title>
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <i class="fas fa-user-shield"></i>
+                <h2>Admin Login</h2>
+                <p>Enter your credentials to access dashboard</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Username</label>
+                    <input type="text" id="username" placeholder="Enter username" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="password" placeholder="Enter password" required>
+                </div>
+                <div id="errorMessage" class="error-message"></div>
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+            <div class="back-home">
+                <a href="index.html"><i class="fas fa-home"></i> Back to Home</a>
+            </div>
+        </div>
+    </div>
 
-<div class="login-box">
-    <h2>SUFISM ADMIN</h2>
-    
-    <input type="text" id="user" placeholder="Username" value="admin">
-    
-    <input type="password" id="pass" placeholder="Password" value="sufism123">
-    
-    <button onclick="checkLogin()">LOGIN</button>
-    
-    <div class="message" id="msg"></div>
-</div>
-
-<script>
-function checkLogin() {
-    var username = document.getElementById('user').value;
-    var password = document.getElementById('pass').value;
-    var msg = document.getElementById('msg');
-    
-    console.log("Username:", username);
-    console.log("Password:", password);
-    
-    if(username === "admin" && password === "sufism123") {
-        msg.innerHTML = "✅ Login successful! Redirecting...";
-        msg.style.color = "green";
-        
-        // Redirect to admin panel
-        setTimeout(function() {
-            window.location.href = "admin-panel.html";
-        }, 1000);
-        
-    } else {
-        msg.innerHTML = "❌ Wrong username or password!";
-        msg.style.color = "red";
-    }
-}
-</script>
-
+    <script src="js/admin-login.js"></script>
 </body>
 </html>
