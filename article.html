@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article - Sufism Blog</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-moon"></i>
+                <span>Sufism Blog</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#articles">Articles</a></li>
+                <li><a href="admin-login.html">Admin</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Article Content -->
+    <article class="article-page">
+        <div class="container">
+            <div id="loadingArticle" class="loading-spinner">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Loading article...</p>
+            </div>
+
+            <div id="articleContent" style="display: none;">
+                <div class="article-header">
+                    <img id="articleImage" src="" alt="Article Image">
+                    <span id="articleCategory" class="category-badge"></span>
+                    <h1 id="articleTitle"></h1>
+                    <div class="article-meta">
+                        <span><i class="far fa-calendar"></i> <span id="articleDate"></span></span>
+                        <span><i class="far fa-user"></i> <span id="articleAuthor"></span></span>
+                    </div>
+                </div>
+                <div class="article-body" id="articleBody"></div>
+                
+                <div class="article-actions">
+                    <button onclick="window.print()" class="action-btn">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                    <button onclick="shareArticle()" class="action-btn">
+                        <i class="fas fa-share"></i> Share
+                    </button>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 Sufism Blog. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="firebase.js"></script>
+    <script src="js/article.js"></script>
+</body>
+</html>
