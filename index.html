@@ -2,911 +2,184 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SUFISM | The Path of Divine Love</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sufism Blog - Spiritual Wisdom</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="firebase.js"></script>
-    
-    <style>
-        :root {
-            --islamic-green: #0a5c36;
-            --gold: #d4af37;
-            --dark: #0d2b1f;
-            --light: #f8f9fa;
-            --text: #333;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
-        body {
-            background: var(--light);
-            color: var(--text);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-        
-        /* Mobile Header */
-        .mobile-header {
-            background: linear-gradient(135deg, var(--islamic-green) 0%, var(--dark) 100%);
-            color: white;
-            padding: 15px 20px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 60px;
-            box-shadow: 0 3px 15px rgba(0,0,0,0.2);
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .logo i {
-            font-size: 24px;
-            color: var(--gold);
-        }
-        
-        .logo h1 {
-            font-size: 20px;
-            font-weight: 600;
-        }
-        
-        .menu-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-            padding: 5px;
-        }
-        
-        /* Sidebar Menu */
-        .sidebar {
-            position: fixed;
-            top: 60px;
-            left: -280px;
-            width: 280px;
-            height: calc(100vh - 60px);
-            background: white;
-            box-shadow: 3px 0 20px rgba(0,0,0,0.15);
-            transition: left 0.3s ease;
-            z-index: 999;
-            overflow-y: auto;
-            padding: 20px 0;
-        }
-        
-        .sidebar.open {
-            left: 0;
-        }
-        
-        .sidebar-header {
-            padding: 0 20px 20px;
-            border-bottom: 1px solid #eee;
-            margin-bottom: 20px;
-        }
-        
-        .sidebar-title {
-            color: var(--islamic-green);
-            font-size: 18px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .menu-category {
-            padding: 0 20px;
-            margin-bottom: 25px;
-        }
-        
-        .category-title {
-            color: #666;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 15px;
-            font-weight: 500;
-        }
-        
-        .menu-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 12px 15px;
-            color: #555;
-            text-decoration: none;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            transition: all 0.3s;
-        }
-        
-        .menu-item:hover, .menu-item.active {
-            background: #f0f7f4;
-            color: var(--islamic-green);
-        }
-        
-        .menu-item i {
-            width: 24px;
-            color: var(--islamic-green);
-        }
-        
-        /* Overlay */
-        .overlay {
-            position: fixed;
-            top: 60px;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 998;
-            display: none;
-        }
-        
-        .overlay.show {
-            display: block;
-        }
-        
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(rgba(10, 92, 54, 0.9), rgba(13, 43, 31, 0.9));
-            color: white;
-            padding: 100px 20px 60px;
-            text-align: center;
-            margin-top: 60px;
-        }
-        
-        .arabic-text {
-            font-family: 'Amiri', serif;
-            font-size: 32px;
-            margin-bottom: 20px;
-            color: var(--gold);
-        }
-        
-        .hero h2 {
-            font-size: 28px;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-        
-        .hero p {
-            font-size: 16px;
-            opacity: 0.9;
-            max-width: 600px;
-            margin: 0 auto 25px;
-            line-height: 1.6;
-        }
-        
-        /* Content Sections */
-        .content-section {
-            padding: 40px 20px;
-        }
-        
-        .section-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--islamic-green);
-            font-size: 22px;
-            margin-bottom: 25px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #eee;
-        }
-        
-        /* Content Cards */
-        .content-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        @media (min-width: 768px) {
-            .content-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-        
-        .content-card {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            transition: transform 0.3s;
-        }
-        
-        .content-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .card-image {
-            height: 180px;
-            background: linear-gradient(135deg, var(--islamic-green), var(--dark));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 50px;
-        }
-        
-        .card-content {
-            padding: 20px;
-        }
-        
-        .card-category {
-            display: inline-block;
-            background: #f0f7f4;
-            color: var(--islamic-green);
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            margin-bottom: 10px;
-        }
-        
-        .card-title {
-            font-size: 18px;
-            color: var(--dark);
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-        
-        .card-text {
-            color: #666;
-            font-size: 15px;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
-        
-        .card-author {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #888;
-            font-size: 14px;
-        }
-        
-        .card-author i {
-            color: var(--gold);
-        }
-        
-        /* Loading */
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #666;
-        }
-        
-        .loading i {
-            font-size: 30px;
-            color: var(--islamic-green);
-            margin-bottom: 15px;
-        }
-        
-        /* Search Bar */
-        .search-container {
-            padding: 20px;
-            background: white;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-        }
-        
-        .search-box {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .search-input {
-            flex: 1;
-            padding: 15px;
-            border: 2px solid #eee;
-            border-radius: 10px;
-            font-size: 16px;
-        }
-        
-        .search-btn {
-            background: var(--islamic-green);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            padding: 0 20px;
-            cursor: pointer;
-        }
-        
-        /* Admin Access Button */
-        .admin-access {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--islamic-green);
-            color: white;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            box-shadow: 0 5px 15px rgba(10, 92, 54, 0.3);
-            z-index: 100;
-            text-decoration: none;
-        }
-        
-        /* Footer */
-        .footer {
-            background: var(--dark);
-            color: white;
-            padding: 40px 20px;
-            text-align: center;
-        }
-        
-        .footer-logo {
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: var(--gold);
-        }
-        
-        .footer p {
-            opacity: 0.8;
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-        
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #666;
-        }
-        
-        .empty-state i {
-            font-size: 50px;
-            color: #ddd;
-            margin-bottom: 20px;
-        }
-        
-        /* Responsive */
-        @media (max-width: 480px) {
-            .hero {
-                padding: 80px 15px 40px;
-            }
-            
-            .arabic-text {
-                font-size: 24px;
-            }
-            
-            .hero h2 {
-                font-size: 24px;
-            }
-            
-            .content-section {
-                padding: 30px 15px;
-            }
-        }
-        
-        /* Message Toast */
-        .toast {
-            position: fixed;
-            top: 70px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--islamic-green);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            z-index: 1000;
-            display: none;
-            animation: slideDown 0.3s ease;
-        }
-        
-        @keyframes slideDown {
-            from {
-                top: 50px;
-                opacity: 0;
-            }
-            to {
-                top: 70px;
-                opacity: 1;
-            }
-        }
-    </style>
 </head>
 <body>
-    <!-- Mobile Header -->
-    <div class="mobile-header">
-        <button class="menu-btn" onclick="toggleSidebar()">
-            <i class="fas fa-bars"></i>
-        </button>
-        <div class="logo">
-            <i class="fas fa-star-and-crescent"></i>
-            <h1>SUFISM</h1>
-        </div>
-        <div></div> <!-- Spacer -->
-    </div>
-    
-    <!-- Sidebar Menu -->
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="sidebar-title">
-                <i class="fas fa-compass"></i>
-                <span>Navigation</span>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-moon"></i>
+                <span>Sufism Blog</span>
             </div>
-            <p style="color: #666; font-size: 14px;">Explore Sufi Wisdom</p>
-        </div>
-        
-        <div class="menu-category">
-            <div class="category-title">Categories</div>
-            <div id="categoriesMenu">
-                <a href="#" class="menu-item active" onclick="filterContent('all')">
-                    <i class="fas fa-th"></i>
-                    <span>All Content</span>
-                </a>
-            </div>
-        </div>
-        
-        <div class="menu-category">
-            <div class="category-title">Quick Links</div>
-            <a href="#" class="menu-item" onclick="filterContent('quotes')">
-                <i class="fas fa-quote-right"></i>
-                <span>Sufi Quotes</span>
-            </a>
-            <a href="#" class="menu-item" onclick="filterContent('poems')">
-                <i class="fas fa-pen-nib"></i>
-                <span>Sufi Poems</span>
-            </a>
-            <a href="#" class="menu-item" onclick="filterContent('teachings')">
-                <i class="fas fa-book"></i>
-                <span>Teachings</span>
-            </a>
-        </div>
-        
-        <div class="menu-category">
-            <div class="category-title">Admin</div>
-            <a href="admin.html" class="menu-item">
-                <i class="fas fa-user-shield"></i>
-                <span>Admin Panel</span>
-            </a>
-            <a href="#" class="menu-item" onclick="refreshContent()">
-                <i class="fas fa-sync-alt"></i>
-                <span>Refresh Content</span>
-            </a>
-        </div>
-    </div>
-    
-    <!-- Overlay -->
-    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
-    
-    <!-- Toast Message -->
-    <div class="toast" id="toast"></div>
-    
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="arabic-text" id="randomArabic">
-            الحمد لله رب العالمين
-        </div>
-        <h2>The Path of Divine Love</h2>
-        <p>Discover the mystical dimension of Islam through Sufi wisdom, poetry, and spiritual teachings from Rumi, Ibn Arabi, Kabir, and other great masters.</p>
-    </section>
-    
-    <!-- Search Bar -->
-    <div class="search-container">
-        <div class="search-box">
-            <input type="text" class="search-input" id="searchInput" placeholder="Search Sufi wisdom..." onkeypress="if(event.key=='Enter') searchContent()">
-            <button class="search-btn" onclick="searchContent()">
+            <ul class="nav-menu">
+                <li><a href="#home" class="active">Home</a></li>
+                <li><a href="#posts">Articles</a></li>
+                <li><a href="#categories">Categories</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="search-box">
+                <input type="text" placeholder="Search...">
                 <i class="fas fa-search"></i>
-            </button>
-        </div>
-    </div>
-    
-    <!-- Main Content -->
-    <main>
-        <!-- Featured Content -->
-        <section class="content-section">
-            <div class="section-title">
-                <i class="fas fa-star"></i>
-                <h2>Featured Wisdom</h2>
             </div>
-            
-            <div class="content-grid" id="featuredContent">
-                <div class="loading">
-                    <i class="fas fa-spinner fa-spin"></i>
-                    <p>Loading divine wisdom...</p>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1 class="hero-title">Welcome to Sufism Blog</h1>
+            <p class="hero-subtitle">Discover the path of spiritual enlightenment and divine wisdom</p>
+            <button class="cta-button">Explore Articles</button>
+        </div>
+    </section>
+
+    <!-- Featured Posts Section -->
+    <section class="featured-posts" id="posts">
+        <div class="container">
+            <h2 class="section-title">Featured Articles</h2>
+            <div class="posts-grid">
+                <!-- Post Card 1 -->
+                <article class="post-card">
+                    <div class="post-image">
+                        <img src="https://images.unsplash.com/photo-1542816417-0983c9c9ad53?w=600" alt="Sufism">
+                        <span class="post-category">Spirituality</span>
+                    </div>
+                    <div class="post-content">
+                        <div class="post-meta">
+                            <span><i class="far fa-calendar"></i> Dec 12, 2025</span>
+                            <span><i class="far fa-clock"></i> 5 min read</span>
+                        </div>
+                        <h3 class="post-title">The Path of Love in Sufism</h3>
+                        <p class="post-excerpt">Explore the profound teachings of love and devotion in Sufi traditions...</p>
+                        <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </article>
+
+                <!-- Post Card 2 -->
+                <article class="post-card">
+                    <div class="post-image">
+                        <img src="https://images.unsplash.com/photo-1518176258769-f227c798150e?w=600" alt="Meditation">
+                        <span class="post-category">Practices</span>
+                    </div>
+                    <div class="post-content">
+                        <div class="post-meta">
+                            <span><i class="far fa-calendar"></i> Dec 10, 2025</span>
+                            <span><i class="far fa-clock"></i> 7 min read</span>
+                        </div>
+                        <h3 class="post-title">Dhikr: The Art of Remembrance</h3>
+                        <p class="post-excerpt">Learn about the sacred practice of dhikr and its transformative power...</p>
+                        <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </article>
+
+                <!-- Post Card 3 -->
+                <article class="post-card">
+                    <div class="post-image">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600" alt="Wisdom">
+                        <span class="post-category">Wisdom</span>
+                    </div>
+                    <div class="post-content">
+                        <div class="post-meta">
+                            <span><i class="far fa-calendar"></i> Dec 8, 2025</span>
+                            <span><i class="far fa-clock"></i> 6 min read</span>
+                        </div>
+                        <h3 class="post-title">Rumi's Teachings on Unity</h3>
+                        <p class="post-excerpt">Discover the timeless wisdom of Rumi and the concept of divine unity...</p>
+                        <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </article>
+
+                <!-- Add more post cards as needed -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories" id="categories">
+        <div class="container">
+            <h2 class="section-title">Explore by Category</h2>
+            <div class="categories-grid">
+                <div class="category-card">
+                    <i class="fas fa-heart"></i>
+                    <h3>Spirituality</h3>
+                    <p>15 Articles</p>
+                </div>
+                <div class="category-card">
+                    <i class="fas fa-praying-hands"></i>
+                    <h3>Practices</h3>
+                    <p>12 Articles</p>
+                </div>
+                <div class="category-card">
+                    <i class="fas fa-book-open"></i>
+                    <h3>Wisdom</h3>
+                    <p>20 Articles</p>
+                </div>
+                <div class="category-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Masters</h3>
+                    <p>8 Articles</p>
                 </div>
             </div>
-        </section>
-        
-        <!-- All Content -->
-        <section class="content-section">
-            <div class="section-title">
-                <i class="fas fa-th-large"></i>
-                <h2>All Content</h2>
-            </div>
-            
-            <div class="content-grid" id="allContent">
-                <div class="loading">
-                    <i class="fas fa-spinner fa-spin"></i>
-                    <p>Loading content from database...</p>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Empty State (if no content) -->
-        <div id="emptyState" class="empty-state" style="display: none;">
-            <i class="fas fa-book-open"></i>
-            <h3>No Content Yet</h3>
-            <p>Admin hasn't added any content yet. Check back soon!</p>
-            <a href="admin.html" class="menu-item" style="display: inline-flex; margin-top: 20px;">
-                <i class="fas fa-plus-circle"></i>
-                <span>Add Content as Admin</span>
-            </a>
         </div>
-    </main>
-    
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter">
+        <div class="container">
+            <h2>Subscribe to Our Newsletter</h2>
+            <p>Get the latest articles delivered to your inbox</p>
+            <form class="newsletter-form">
+                <input type="email" placeholder="Enter your email">
+                <button type="submit">Subscribe</button>
+            </form>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer class="footer">
-        <div class="footer-logo">
-            <i class="fas fa-star-and-crescent"></i>
-        </div>
-        <p>SUFISM - The Mystical Path to Divine Love</p>
-        <p>© 2024 All Rights Reserved</p>
-        <p style="margin-top: 20px; font-size: 12px; opacity: 0.6;">
-            "The Sufi is the son of the present moment." - Rumi
-        </p>
-    </footer>
-    
-    <!-- Admin Access Button -->
-    <a href="admin.html" class="admin-access">
-        <i class="fas fa-lock"></i>
-    </a>
-    
-    <script>
-        // 📱 SIDEBAR FUNCTIONS
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('overlay');
-            sidebar.classList.toggle('open');
-            overlay.classList.toggle('show');
-        }
-        
-        function closeSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('overlay');
-            sidebar.classList.remove('open');
-            overlay.classList.remove('show');
-        }
-        
-        // 📊 LOAD CONTENT FROM FIREBASE
-        async function loadContent() {
-            try {
-                const contentContainer = document.getElementById('allContent');
-                const featuredContainer = document.getElementById('featuredContent');
-                
-                // Show loading
-                contentContainer.innerHTML = `
-                    <div class="loading">
-                        <i class="fas fa-spinner fa-spin"></i>
-                        <p>Loading divine wisdom...</p>
-                    </div>
-                `;
-                
-                // Check if Firebase is initialized
-                if (!window.db) {
-                    showToast('Firebase not connected. Please refresh page.', 'error');
-                    return;
-                }
-                
-                // Get data from Firestore
-                const querySnapshot = await db.collection('sufi_content')
-                    .orderBy('timestamp', 'desc')
-                    .limit(20)
-                    .get();
-                
-                if(querySnapshot.empty) {
-                    // No content found
-                    contentContainer.innerHTML = '';
-                    featuredContainer.innerHTML = '';
-                    document.getElementById('emptyState').style.display = 'block';
-                    showToast('No content found. Add content from Admin Panel.', 'info');
-                    return;
-                }
-                
-                // Hide empty state
-                document.getElementById('emptyState').style.display = 'none';
-                
-                let featuredHTML = '';
-                let allHTML = '';
-                let count = 0;
-                
-                querySnapshot.forEach(doc => {
-                    const data = doc.data();
-                    const card = createContentCard(data, doc.id);
-                    
-                    // First 2 items as featured
-                    if(count < 2) {
-                        featuredHTML += card;
-                    }
-                    
-                    allHTML += card;
-                    count++;
-                });
-                
-                // Update DOM
-                featuredContainer.innerHTML = featuredHTML || `
-                    <div class="empty-state">
-                        <i class="fas fa-star"></i>
-                        <p>No featured content yet</p>
-                    </div>
-                `;
-                
-                contentContainer.innerHTML = allHTML;
-                
-                showToast(`Loaded ${count} items from database`, 'success');
-                
-            } catch(error) {
-                console.error("Error loading content:", error);
-                document.getElementById('allContent').innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <h3>Error Loading Content</h3>
-                        <p>${error.message}</p>
-                        <p style="margin-top: 10px; font-size: 14px;">Check Firebase connection</p>
-                    </div>
-                `;
-                showToast('Error loading content: ' + error.message, 'error');
-            }
-        }
-        
-        // 🎨 CREATE CONTENT CARD
-        function createContentCard(data, id) {
-            const icons = {
-                'quotes': 'fa-quote-right',
-                'poems': 'fa-pen-nib',
-                'teachings': 'fa-book',
-                'article': 'fa-file-alt'
-            };
-            
-            const categoryColors = {
-                'quotes': '#0a5c36',
-                'poems': '#d4af37',
-                'teachings': '#2c3e50',
-                'article': '#8e44ad'
-            };
-            
-            const categoryNames = {
-                'quotes': 'Sufi Quote',
-                'poems': 'Sufi Poem',
-                'teachings': 'Teaching',
-                'article': 'Article'
-            };
-            
-            const category = data.category || 'quotes';
-            const icon = icons[category] || 'fa-star';
-            const color = categoryColors[category] || '#0a5c36';
-            const categoryName = categoryNames[category] || 'Content';
-            
-            // Format date
-            let dateStr = 'Recently';
-            if(data.timestamp) {
-                try {
-                    const date = data.timestamp.toDate();
-                    dateStr = date.toLocaleDateString('en-US', { 
-                        month: 'short', 
-                        day: 'numeric',
-                        year: 'numeric'
-                    });
-                } catch(e) {
-                    console.log("Date error:", e);
-                }
-            }
-            
-            // Truncate content for preview
-            let contentPreview = data.content || 'Divine wisdom from the masters...';
-            if(contentPreview.length > 150) {
-                contentPreview = contentPreview.substring(0, 150) + '...';
-            }
-            
-            return `
-                <div class="content-card" data-category="${category}" data-id="${id}">
-                    <div class="card-image" style="background: linear-gradient(135deg, ${color}, ${color}99);">
-                        <i class="fas ${icon}"></i>
-                    </div>
-                    <div class="card-content">
-                        <span class="card-category">${categoryName}</span>
-                        <h3 class="card-title">${data.title || 'Sufi Wisdom'}</h3>
-                        <p class="card-text">${contentPreview}</p>
-                        <div class="card-author">
-                            <i class="fas fa-user"></i>
-                            <span>${data.author || 'Anonymous'} • ${dateStr}</span>
-                        </div>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Sufism Blog</h3>
+                    <p>A journey towards spiritual enlightenment and divine wisdom.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
-            `;
-        }
-        
-        // 🏷️ LOAD CATEGORIES
-        function loadCategories() {
-            const categoriesMenu = document.getElementById('categoriesMenu');
-            
-            // Default categories
-            const defaultCategories = [
-                {id: 'all', name: 'All Content', icon: 'fa-th'},
-                {id: 'quotes', name: 'Sufi Quotes', icon: 'fa-quote-right'},
-                {id: 'poems', name: 'Sufi Poems', icon: 'fa-pen-nib'},
-                {id: 'teachings', name: 'Teachings', icon: 'fa-book'}
-            ];
-            
-            // Clear existing (keep first one)
-            const firstItem = categoriesMenu.querySelector('.menu-item');
-            categoriesMenu.innerHTML = '';
-            if(firstItem) categoriesMenu.appendChild(firstItem);
-            
-            // Add categories to menu
-            defaultCategories.forEach(cat => {
-                if(cat.id !== 'all') {
-                    const item = document.createElement('a');
-                    item.href = '#';
-                    item.className = 'menu-item';
-                    item.innerHTML = `
-                        <i class="fas ${cat.icon}"></i>
-                        <span>${cat.name}</span>
-                    `;
-                    item.onclick = () => filterContent(cat.id);
-                    categoriesMenu.appendChild(item);
-                }
-            });
-        }
-        
-        // 🔍 FILTER CONTENT BY CATEGORY
-        function filterContent(category) {
-            closeSidebar();
-            
-            const cards = document.querySelectorAll('.content-card');
-            const sectionTitle = document.querySelectorAll('.section-title h2')[1]; // Second h2
-            
-            // Update active menu item
-            document.querySelectorAll('.menu-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            // Activate clicked item
-            event.target.closest('.menu-item').classList.add('active');
-            
-            if(category === 'all') {
-                cards.forEach(card => card.style.display = 'block');
-                if(sectionTitle) sectionTitle.textContent = 'All Content';
-            } else {
-                cards.forEach(card => {
-                    if(card.dataset.category === category) {
-                        card.style.display = 'block';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-                
-                // Update section title
-                const categoryNames = {
-                    'quotes': 'Sufi Quotes',
-                    'poems': 'Sufi Poems',
-                    'teachings': 'Teachings'
-                };
-                if(sectionTitle) {
-                    sectionTitle.textContent = categoryNames[category] || category;
-                }
-            }
-        }
-        
-        // 🔎 SEARCH CONTENT
-        function searchContent() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-            const cards = document.querySelectorAll('.content-card');
-            
-            if(!searchTerm) {
-                cards.forEach(card => card.style.display = 'block');
-                showToast('Showing all content', 'info');
-                return;
-            }
-            
-            let foundCount = 0;
-            
-            cards.forEach(card => {
-                const title = card.querySelector('.card-title').textContent.toLowerCase();
-                const text = card.querySelector('.card-text').textContent.toLowerCase();
-                const author = card.querySelector('.card-author span').textContent.toLowerCase();
-                
-                if(title.includes(searchTerm) || text.includes(searchTerm) || author.includes(searchTerm)) {
-                    card.style.display = 'block';
-                    foundCount++;
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-            
-            closeSidebar();
-            
-            if(foundCount > 0) {
-                showToast(`Found ${foundCount} items for "${searchTerm}"`, 'success');
-            } else {
-                showToast(`No results found for "${searchTerm}"`, 'info');
-            }
-        }
-        
-        // 🔄 REFRESH CONTENT
-        function refreshContent() {
-            closeSidebar();
-            loadContent();
-        }
-        
-        // 💬 SHOW TOAST MESSAGE
-        function showToast(message, type) {
-            const toast = document.getElementById('toast');
-            const colors = {
-                'success': '#0a5c36',
-                'error': '#dc3545',
-                'info': '#17a2b8',
-                'warning': '#ffc107'
-            };
-            
-            toast.textContent = message;
-            toast.style.backgroundColor = colors[type] || '#0a5c36';
-            toast.style.display = 'block';
-            
-            setTimeout(() => {
-                toast.style.display = 'none';
-            }, 3000);
-        }
-        
-        // 🎲 RANDOM ARABIC TEXT
-        const arabicTexts = [
-            "الحمد لله رب العالمين",
-            "الله نور السماوات والأرض",
-            "قل هو الله أحد",
-            "رب اشرح لي صدري",
-            "إن الله مع الصابرين",
-            "والعصر إن الإنسان لفي خسر",
-            "فاذكروني أذكركم",
-            "إنما المؤمنون إخوة",
-            "ولا تيأسوا من روح الله",
-            "والله يعلم المفسد من المصلح"
-        ];
-        
-        // Set random Arabic text on load
-        document.getElementById('randomArabic').textContent = 
-            arabicTexts[Math.floor(Math.random() * arabicTexts.length)];
-        
-        // 📱 INITIALIZE ON LOAD
-        window.onload = function() {
-            // Check Firebase connection
-            if(!window.db) {
-                console.error("Firebase not initialized!");
-                showToast('Firebase connection failed. Check console.', 'error');
-            } else {
-                console.log("Firebase connected successfully");
-            }
-            
-            // Load content after 1 second
-            setTimeout(() => {
-                loadContent();
-                loadCategories();
-            }, 1000);
-        };
-    </script>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <p><i class="fas fa-envelope"></i> info@sufismblog.com</p>
+                    <p><i class="fas fa-phone"></i> +91 XXXXXXXXXX</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Sufism Blog. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
