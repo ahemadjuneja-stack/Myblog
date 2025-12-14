@@ -245,3 +245,61 @@ body{
   .nav-menu{display:none;}
   .hero-title{font-size:2.2rem;}
 }
+
+
+/* Mobile Menu Button */
+.menu-toggle{
+  display:none;
+  font-size:1.6rem;
+  color:#fff;
+  cursor:pointer;
+}
+
+/* Mobile View */
+@media(max-width:768px){
+
+  body{
+    overflow-x:hidden;
+  }
+
+  .menu-toggle{
+    display:block;
+  }
+
+  .nav-menu{
+    position:absolute;
+    top:65px;
+    left:0;
+    width:100%;
+    background:linear-gradient(135deg,var(--primary),var(--secondary));
+    flex-direction:column;
+    align-items:center;
+    display:none;
+    padding:20px 0;
+  }
+
+  .nav-menu.show{
+    display:flex;
+  }
+
+  .nav-menu li{
+    margin:12px 0;
+  }
+
+  .search-container{
+    display:none;
+  }
+
+  .hero{
+    height:320px;
+    padding:0 12px;
+  }
+
+  .hero-title{
+    font-size:2rem;
+  }
+
+  .hero-subtitle{
+    font-size:1.1rem;
+  }
+}
